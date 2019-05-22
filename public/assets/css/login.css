@@ -84,6 +84,7 @@ body {
 }
 .data-info span {
   color: #b9bbbe;
+<<<<<<< HEAD
   font-size: 15px;
   white-space: nowrap;
 }
@@ -120,3 +121,8 @@ body {
   background-color: #7289da;
   cursor: pointer;
 }
+=======
+  font-size: 16px;
+  white-space: nowrap;
+}
+>>>>>>> Add container login
