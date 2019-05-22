@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  display: grid;
+  grid-template:12% 1fr/ 20% 1fr;
+  height: 100vh;
+  background-color: #656463;
+  grid-template-areas:
+'header main'
+'app_name head_channel'
+}
+
+/* Variables */
+header { grid-area: header;}
+main { grid-area: main; }
+.head_channel { grid-area: head_channel;}
+.app_name { grid-area: app_name;}
+
+header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+main {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  padding: 0px 20px;
+}
+
+h1, h2 {
+  margin:auto  0px;
+}
+
+.channels {
+  border: 1px solid black;
+  padding: 20px;
+}
+
+.messages {
+  border: 1px solid black;
+}
+
+.text_channels {
+  /* list-style:  */
+  
+}
