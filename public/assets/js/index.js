@@ -110,7 +110,7 @@ function handleAddChannelSubmit(event) {
     console.log("entro a 0");
     $error.innerText = "This channel already exists";
   } else {
-    $error.innerText = "Invalid channelname";
+    $error.innerText = "Invalid channel name";
   }
 }
 
