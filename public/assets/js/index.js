@@ -107,7 +107,6 @@ function handleAddChannelSubmit(event) {
     listChannels();
     $newChannelName.value = "";
   } else if (result == 0) {
-    console.log("entro a 0");
     $error.innerText = "This channel already exists";
   } else {
     $error.innerText = "Invalid channel name";
