@@ -1,5 +1,6 @@
 const keyStorage = "app-data";
 var attemptConnectionSocket = 0;
+var indexChannelActive = 0;
 var app, socket;
 
 function createNewChannel(name, author) {
@@ -9,6 +10,7 @@ function createNewChannel(name, author) {
     name: name,
     author: author,
     joined: true,
+    visibility: false,
     messages: []
   };
 }
@@ -25,7 +27,7 @@ function createNewMessage(message, author, typeMessage) {
 }
 
 function addChannel(name, author) {
-  if (name.trim().length == 0) return -1;
+  if (name.length == 0) return -1;
 
   if (!app.channels.some(channel => channel.name == name)) {
     let newChannel = createNewChannel(name, author);
@@ -53,8 +55,8 @@ function initializeConnection() {
       let messageForYou = "Welcome " + user.username;
 
       messageForAll = user.username + " has joined to this group";
-      app.channels[0].joined = true;
-      app.channels[0].messages.push(
+      app.channels[indexChannelActive].joined = true;
+      app.channels[indexChannelActive].messages.push(
         createNewMessage(messageForYou, user, true)
       );
     } else messageForAll = user.username + " has connected";
@@ -66,29 +68,26 @@ function initializeConnection() {
 }
 
 function connectionSocket() {
-  socket = new WebSocket("ws://192.168.86.55:3000");
+  socket = new WebSocket("ws://192.168.86.81:3000");
 
   socket.addEventListener("open", initializeConnection);
 
   socket.addEventListener("close", () => {
     console.log("Disconnection");
+    socket.close();
     attemptConnectionSocket++;
     if (attemptConnectionSocket < 4) connectionSocket();
-    else console.log("Server could has been shutdown");
+    else {
+      console.log("Server could has been shutdown");
+      attemptConnectionSocket = 0;
+    }
   });
   socket.addEventListener("message", event => {
     let receivedData = JSON.parse(event.data);
-    if (receivedData.author.id != app.currentuser.id) {
-      console.log(receivedData);
-    }
+    console.log(receivedData);
+    app.channels[indexChannelActive].messages.push(receivedData);
+    localStorage.setItem(keyStorage, JSON.stringify(app));
   });
-}
-
-function assignEvents() {
-  let $formAddChannel = document.getElementById("addChannelForm");
-  $formAddChannel.addEventListener("submit", handleAddChannelSubmit);
-
-  connectionSocket();
 }
 
 function handleAddChannelSubmit(event) {
@@ -101,7 +100,7 @@ function handleAddChannelSubmit(event) {
     username: app.currentuser.username
   };
 
-  let result = addChannel($newChannelName.value, user);
+  let result = addChannel($newChannelName.value.trim(), user);
 
   if (result == 1) {
     listChannels();
@@ -113,8 +112,35 @@ function handleAddChannelSubmit(event) {
   }
 }
 
+function handleAddMessageSubmit(event) {
+  event.preventDefault();
+  let $message = document.getElementById("txtMessage");
+  if ($message.value.trim().length != 0) {
+    let user = app.currentuser;
+    let newMessage = createNewMessage($message.value.trim(), user, false);
+    app.channels[indexChannelActive].messages.push(newMessage);
+    socket.send(JSON.stringify(newMessage));
+    $message.value = "";
+  }
+}
+
+function assignEvents() {
+  let $formAddChannel = document.getElementById("addChannelForm");
+  $formAddChannel.addEventListener("submit", handleAddChannelSubmit);
+
+  let $formSendMessage = document.getElementById("sendMessageForm");
+  $formSendMessage.addEventListener("submit", handleAddMessageSubmit);
+
+  connectionSocket();
+}
+
 window.onload = function() {
-  app = JSON.parse(localStorage.getItem(keyStorage));
-  assignEvents();
-  listChannels();
+  let storedData = localStorage.getItem(keyStorage);
+  if (storedData) {
+    app = JSON.parse(storedData);
+    assignEvents();
+    listChannels();
+  } else {
+    window.location.href = "login.html";
+  }
 };
