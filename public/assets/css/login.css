@@ -60,6 +60,7 @@ body {
 .group-activities {
   display: flex;
   justify-content: center;
+  margin-bottom: 30px;
 }
 .data-info {
   margin: 5px;
@@ -83,6 +84,39 @@ body {
 }
 .data-info span {
   color: #b9bbbe;
-  font-size: 16px;
+  font-size: 15px;
   white-space: nowrap;
+}
+.username {
+  color: #b9bbbe;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+.input-username {
+  width: calc(100% - 20px);
+  border: none;
+  margin-top: 20px;
+  padding: 10px 10px;
+  font-size: 15px;
+  color: #f6f6f7;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.input-username:focus {
+  border: 1px solid #7289da;
+  outline: none;
+}
+.button-login {
+  width: 100%;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #7289da;
+  cursor: pointer;
 }
