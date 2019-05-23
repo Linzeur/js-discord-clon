@@ -1,3 +1,5 @@
+var $formAddChannel;
+
 function createNewChannel(name, author) {
   return {
     id: Date.now(),
@@ -27,8 +29,6 @@ function listChannels() {
   channelList.innerHTML = elements;
 }
 
-$formAddChannel.addEventListener("submit", handleAddChannelSubmit);
-
 function handleAddChannelSubmit(event) {
   event.preventDefault();
   let $error = document.getElementById("channelError");
@@ -46,9 +46,8 @@ function handleAddChannelSubmit(event) {
   }
 }
 
-var $formAddChannel;
-
-window.onload = () => {
+window.onload = function() {
   $formAddChannel = document.getElementById("addChannelForm");
+  $formAddChannel.addEventListener("submit", handleAddChannelSubmit);
   listChannels();
 };
