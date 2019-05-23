@@ -18,7 +18,7 @@ function newAppObject(newUsername) {
         creationDate: null,
         name: "general",
         author: null,
-        state: "joined",
+        joined: false,
         messages: []
       }
     ]
