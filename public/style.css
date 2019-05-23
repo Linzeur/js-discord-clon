@@ -3,23 +3,27 @@ body {
   display: grid;
   grid-template: 48px 1fr/ 20% 1fr;
   height: 100vh;
+  width: 100vw;
   grid-template-areas:
-    "app-name channel-option"
-    "channels chat-room";
-}
-/* Only test */
-/* * {
+  "app-name channel-option"
+  "channels chat-room";
+  }
+  /* Only test */
+  /* * {
   border: 1px solid red;
-} */
-.app-name {
+  } */
+  .app-name {
   grid-area: app-name;
-}
-.channel-option {
+  }
+
+  .channel-option {
   grid-area: channel-option;
-}
-.channels {
+  }
+
+  .channels {
   grid-area: channels;
-}
-.chat-room {
+  }
+  
+  .chat-room {
   grid-area: chat-room;
-}
+  }
