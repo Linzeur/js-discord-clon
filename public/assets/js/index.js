@@ -25,12 +25,14 @@ function createNewMessage(message, author, typeMessage) {
 }
 
 function addChannel(name, author) {
+  if (name.trim().length == 0) return -1;
+
   if (!app.channels.some(channel => channel.name == name)) {
     let newChannel = createNewChannel(name, author);
     app.channels.push(newChannel);
-    return true;
+    return 1;
   }
-  return false;
+  return 0;
 }
 
 function listChannels() {
@@ -64,7 +66,7 @@ function initializeConnection() {
 }
 
 function connectionSocket() {
-  socket = new WebSocket("ws://192.168.86.81:3000");
+  socket = new WebSocket("ws://192.168.86.55:3000");
 
   socket.addEventListener("open", initializeConnection);
 
@@ -98,10 +100,17 @@ function handleAddChannelSubmit(event) {
     id: app.currentuser.id,
     username: app.currentuser.username
   };
-  if (addChannel($newChannelName.value, user)) {
+
+  let result = addChannel($newChannelName.value, user);
+
+  if (result == 1) {
     listChannels();
     $newChannelName.value = "";
-  } else $error.innerText = "This channel already exists";
+  } else if (result == 0) {
+    $error.innerText = "This channel already exists";
+  } else {
+    $error.innerText = "Invalid channel name";
+  }
 }
 
 window.onload = function() {

@@ -1,29 +1,104 @@
 body {
-  margin: 0;
   display: grid;
-  grid-template: 48px 1fr/ 20% 1fr;
+  margin: 0;
   height: 100vh;
   width: 100vw;
+  font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  grid-template: 48px 1fr/ 20% 1fr;
   grid-template-areas:
-  "app-name channel-option"
-  "channels chat-room";
-  }
-  /* Only test */
-  /* * {
+    "app-name channel-header"
+    "channels chat-room";
+}
+/* Only test */
+/* * {
   border: 1px solid red;
   } */
-  .app-name {
+.app-name {
   grid-area: app-name;
-  }
+}
 
-  .channel-option {
-  grid-area: channel-option;
-  }
+.channel-header {
+  grid-area: channel-header;
+}
 
-  .channels {
+.channels {
   grid-area: channels;
-  }
-  
-  .chat-room {
+}
+
+.chat-room {
   grid-area: chat-room;
-  }
+}
+
+.channel-header,
+.chat-room {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #36393f;
+}
+
+.channel-header {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.channel-name {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+
+.channel-name .name {
+  font-size: 15px;
+  color: #f6f6f7;
+  padding: 0;
+}
+
+.channel-header svg {
+  width: 24px;
+  height: 24px;
+  margin: 0 8px;
+}
+
+.channel-name svg {
+  fill: #72767d;
+}
+
+.channel-option svg {
+  fill: #b9bbbe;
+}
+
+.channel-option svg:hover {
+  cursor: pointer;
+  fill: #dcddde;
+}
+
+.search {
+  display: inline-block;
+}
+
+.input-search {
+  display: none;
+  width: calc(100% - 20px);
+  border: none;
+  margin-top: 20px;
+  padding: 10px 10px;
+  font-size: 15px;
+  color: #f6f6f7;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.input-search:focus {
+  border: 1px solid #7289da;
+  outline: none;
+}
+
+.chat-room {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
