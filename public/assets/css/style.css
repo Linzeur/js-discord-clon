@@ -1,0 +1,67 @@
+body {
+  margin: 0;
+  display: grid;
+  grid-template: 48px 1fr/ 15% 1fr;
+  height: 100vh;
+  width: 100vw;
+  grid-template-areas:
+    'app-name channel-option'
+    'channels chat-room';
+}
+/* Only test */
+/* * {
+  border: 1px solid red;
+  } */
+.app-name {
+  grid-area: app-name;
+}
+
+.channel-option {
+  grid-area: channel-option;
+}
+
+.channels {
+  grid-area: channels;
+}
+
+.chat-room {
+  grid-area: chat-room;
+}
+
+.channels {
+  background-color: #2f3136;
+  position: relative;
+}
+
+.text_channels {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #8e9297;
+}
+
+#channels_list {
+  list-style: none;
+  color: #8e9297;
+}
+
+.icon-1_QxNX {
+  color: #8e9297;
+  display: block;
+}
+
+#addChannelForm {
+  margin: 0px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+
+.channel_section_bottom {
+  background: rgba(32,34,37,.3);
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 52px;
+}
