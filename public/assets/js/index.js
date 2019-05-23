@@ -27,8 +27,6 @@ function listChannels() {
   channelList.innerHTML = elements;
 }
 
-var $formAddChannel = document.getElementById("addChannelForm");
-
 $formAddChannel.addEventListener("submit", handleAddChannelSubmit);
 
 function handleAddChannelSubmit(event) {
@@ -48,6 +46,9 @@ function handleAddChannelSubmit(event) {
   }
 }
 
+var $formAddChannel;
+
 window.onload = () => {
+  $formAddChannel = document.getElementById("addChannelForm");
   listChannels();
 };
