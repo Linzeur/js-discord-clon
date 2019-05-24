@@ -4,7 +4,7 @@ body {
   height: 100vh;
   width: 100vw;
   font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  grid-template: 48px 1fr/ 20% 1fr;
+  grid-template: 48px 1fr/ 300px 1fr;
   grid-template-areas:
     "app-name channel-header"
     "channels chat-room";
@@ -29,6 +29,25 @@ body {
   grid-area: chat-room;
 }
 
+.app-name{
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px ;
+  color: #fff;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #2f3136;
+}
+
+.app-name svg {
+  width: 28px;
+  height: 28px;
+  fill: #8e9297;
+}
+
 .channels {
   background-color: #2f3136;
   position: relative;
@@ -46,6 +65,12 @@ body {
   cursor: pointer;
 }
 
+.text_channels svg {
+  width: 24px;
+   height: 24px;
+   fill: #8e9297;
+}
+
 .each_channel:hover {
   color: #fff;
   cursor: pointer;
@@ -53,11 +78,6 @@ body {
 #channels_list {
   list-style: none;
   color: #8e9297;
-}
-
-.icon-1_QxNX {
-  color: #8e9297;
-  display: block;
 }
 
 #addChannelForm {
@@ -86,36 +106,39 @@ body {
   position: absolute;
   bottom: 0px;
   width: 100%;
-  height: 40px;
+  height: 50px;
   color: #fff;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-top: 3%;
 }
 
 .channel_bottom {
   width: 12%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 2%;
 }
 
-.channel_bottom2 {
+.channel_bottom2,
+.channel_bottom3 {
   width: 44%;
   height: 100%;
   padding-left: 3%;
+  /* padding-top: 7px; */
 }
 
 .channel_user_logo {
   border-radius: 50%;
-  width: 100%;
-  height: 80%;
+  width: 38px;
+  height: 38px;
   display: flex;
+  padding: 5px;
   flex-direction: column;
   align-items: center;
+}
+
+.channel_user_logo:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
 
 .channel_status {
@@ -124,9 +147,9 @@ body {
   border: 2px solid #2f3136;
   width: 10px;
   height: 10px;
-  bottom: 9px;
+  bottom: 3px;
   border-radius: 7px;
-  left: 9%;
+  left: 10%;
 }
 
 .channel_username {
@@ -135,31 +158,48 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 84px;
+  padding: 7px 0px 0px 20px;
 }
 
 .channel_user_id {
-  display: block;
+  padding-left: 20px;
   margin-top: 4px;
-  opacity: 0.4;
+  opacity: .4;
   font-size: 10px;
 }
 
-.icon_button_micro,
-.icon_button_settings,
-.icon_button_audio {
+.buttons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  opacity: 1;
+  font-size: 10px;
+  padding-left: 20px;
+  margin-top: 12px;
+}
+
+.buttons svg{
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+}
+.button_micro,
+.button_settings,
+.button_audio {
   width: 32px;
   height: 32px;
   padding: 0;
+  background: no-repeat 50% 50%;
+  background-size: 18px 18px;
   position: relative;
   opacity: 0.6;
   border: none;
-  cursor: pointer;
-  margin: 0px 3px;
 }
 
-.icon_button_micro:hover,
-.icon_button_settings:hover,
-.icon_button_audio:hover {
+
+.button_micro:hover,
+.button_settings:hover,
+.button_audio:hover {
   opacity: 1;
 }
 
