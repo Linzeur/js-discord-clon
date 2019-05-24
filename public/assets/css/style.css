@@ -255,12 +255,7 @@ body {
 }
 
 .container-notification,
-<<<<<<< HEAD
 .line {
-=======
-.line,
-.container-messages {
->>>>>>> Add chat container
   display: flex;
   flex-direction: row;
   align-content: center;
