@@ -343,20 +343,11 @@ body {
 }
 
 .chat-footer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   padding: 10px;
 }
 
 .chat-footer svg {
   margin: 0 10px;
-}
-
-.-normal {
-  fill: #fff;
-  width: 24px;
-  height: 24px;
 }
 
 .-effect {
@@ -368,6 +359,33 @@ body {
 .-effect:hover {
   cursor: pointer;
   fill: #fff;
-  width: 24px;
-  height: 24px;
+  transform: scale(1.2);
+}
+
+.container-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5px;
+  background-color: rgba(114, 118, 125, 0.3);
+  margin: 2px;
+  padding: 10px;
+}
+
+.write-message {
+  width: 100%;
+}
+
+.write-message input[type="text"] {
+  width: 100%;
+  padding-left: 5px;
+  border: none;
+  font-size: 14px;
+  color: #f6f6f7;
+  border-left: 1px solid #55585d;
+  background-color: rgb(72, 75, 81);
+}
+
+.write-message input[type="text"]:focus {
+  outline: none;
 }
