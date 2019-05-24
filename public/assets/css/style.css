@@ -267,10 +267,6 @@ body {
   border-top: 1px solid hsla(0, 0%, 100%, 0.06);
 }
 
-.-b-bottom {
-  border-bottom: 1px solid hsla(0, 0%, 100%, 0.06);
-}
-
 .line::after,
 .line::before {
   content: " ";
