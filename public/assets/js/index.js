@@ -201,7 +201,7 @@ function connectionSocket() {
   socket.addEventListener("open", initializeConnection);
 
   socket.addEventListener("close", () => {
-    console.log("Disconnection");
+    console.log("Reconnection");
     socket.close();
     attemptConnectionSocket++;
     if (attemptConnectionSocket < 4) connectionSocket();
@@ -211,10 +211,15 @@ function connectionSocket() {
     }
   });
   socket.addEventListener("message", event => {
-    let receivedData = JSON.parse(event.data);
-    console.log(receivedData);
-    app.channels[indexChannelActive].messages.push(receivedData);
-    localStorage.setItem(keyStorage, JSON.stringify(app));
+    if (event.data == "anyUserActive") {
+      let messageToSend = { userConnected: app.users };
+      socket.send(JSON.stringify(messageToSend));
+    } else {
+      let receivedData = JSON.parse(event.data);
+      console.log(receivedData);
+      app.channels[indexChannelActive].messages.push(receivedData);
+      localStorage.setItem(keyStorage, JSON.stringify(app));
+    }
   });
 }
 
