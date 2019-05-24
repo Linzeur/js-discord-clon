@@ -268,7 +268,7 @@ window.onload = function() {
     app = JSON.parse(storedData);
     assignEvents();
     listChannels();
-    // listAllMessages();
+    listAllMessages();
   } else {
     window.location.href = "login.html";
   }
