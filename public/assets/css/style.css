@@ -196,13 +196,6 @@ body {
   border: none;
 }
 
-.button_micro {
-  background: url("/assets/896770bf2d6ed0358ed0adefdbe96a24.svg");
-}
-
-.button_audio {
-  background: url("/assets/c7c47afdf35d5a3e06233319d3aa7674.svg");
-}
 
 .button_micro:hover,
 .button_settings:hover,
