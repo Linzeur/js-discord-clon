@@ -4,7 +4,10 @@ Create a multi channel chat application using the WebSocket server in [codeableo
 
 ## Team
 
-**Add your team members here**
+- Jonathan Mendoza - Project Lead
+- Paulo Tijero - Developer
+- Diego Torres - Developer
+- Brayan Ciudad - Developer
 
 ## Requirements
 
@@ -23,7 +26,7 @@ Create a multi channel chat application using the WebSocket server in [codeableo
 - [ ] A message must have a content, an author and the date.
 - [ ] The date of a message should be displayed as only the hour with minutes.
 - [ ] The messages should be grouped by date, without caring about the hour and minutes.
-  - [ ] The grouped messages should have a visual separator with other groups. 
+  - [ ] The grouped messages should have a visual separator with other groups.
   - [ ] The current day should be displayed as `Today`. (_optional_)
   - [ ] The previous day should be displayed as `Yesterday`. (_optional_)
 
