@@ -1,14 +1,15 @@
 const keyStorage = "app-data",
   pageToRedirect = "index.html";
-const timePingMembers = 5000;
+const timePingMembers = 3000,
+  maxAttempt = 20;
 
 var attemptConnectionSocket = 0;
-
+var usersJoint = [];
 var socket;
 
 function newAppObject(newUsername) {
   let newId = Date.now();
-  return {
+  let obj = {
     currentuser: {
       id: newId,
       username: newUsername,
@@ -34,6 +35,9 @@ function newAppObject(newUsername) {
       }
     ]
   };
+  obj.users = obj.users.concat(usersJoint);
+
+  return obj;
 }
 
 function createUser() {
@@ -44,20 +48,33 @@ function createUser() {
 }
 
 function askConnectedMembers() {
+  attemptConnectionSocket = 0;
+  socket.send("anyUserActive");
   setInterval(function() {
     if (socket.readyState == 1) socket.send("anyUserActive");
   }, timePingMembers);
 }
 
 function getNumberConnectedMembers(message) {
-  if (message.indexOf("userConnected") > -1) {
+  if (message.indexOf("usersConnected") > -1) {
     let jsonMessage = JSON.parse(message);
-    let usersConnected = jsonMessage.usersConnected.filter(
-      userObj => userObj.isActive
-    ).length;
-    let totalMembers = jsonMessage.usersConnected.length;
+
+    usersJoint = Array.from(jsonMessage.usersConnected);
+    let usersConnected = usersJoint.filter(userObj => userObj.isActive).length;
+    let totalMembers = usersJoint.length;
+
     document.getElementById("spnOnline").innerHTML = `${usersConnected} Online`;
     document.getElementById("spnTotal").innerHTML = `${totalMembers} Members`;
+  }
+}
+
+function reconnectServer() {
+  console.log("Reconnection");
+  attemptConnectionSocket++;
+  if (attemptConnectionSocket < maxAttempt) connectionSocket();
+  else {
+    console.log("Server could has been shutdown");
+    attemptConnectionSocket = 0;
   }
 }
 
@@ -66,18 +83,11 @@ function connectionSocket() {
 
   socket.addEventListener("open", askConnectedMembers);
 
-  socket.addEventListener("close", () => {
-    console.log("Reconnection");
-    attemptConnectionSocket++;
-    if (attemptConnectionSocket < 4) connectionSocket();
-    else {
-      console.log("Server could has been shutdown");
-      attemptConnectionSocket = 0;
-    }
-  });
   socket.addEventListener("message", event =>
     getNumberConnectedMembers(event.data)
   );
+
+  socket.addEventListener("close", reconnectServer);
 }
 
 function assignEvents() {

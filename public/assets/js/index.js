@@ -1,4 +1,6 @@
 const keyStorage = "app-data";
+const maxAttempt = 20;
+
 var attemptConnectionSocket = 0;
 var indexChannelActive = 0;
 var app, socket;
@@ -77,6 +79,7 @@ function addChannel(name, author) {
     app.channels.push(newChannel);
     return 1;
   }
+
   return 0;
 }
 
@@ -172,7 +175,43 @@ function listAllMessages() {
   $messagesContainer.innerHTML = messaggesList;
 }
 
+function filterOwnMessages(messageReceived) {
+  return !(
+    messageReceived.isNotification &&
+    messageReceived.author.id == app.currentuser.id &&
+    messageReceived.content.indexOf("Welcome") == -1
+  );
+}
+
+function modifyStateUsers(idUser, newState) {
+  app.users = app.users.map(currentValue => {
+    if (currentValue.id == idUser) currentValue.isActive = newState;
+    return currentValue;
+  });
+}
+
+function receiveMessages(data) {
+  if (filterOwnMessages(data)) {
+    if (data.isNotification) {
+      //There are two types of messages with property isNotification = true, to send:
+      //1.- When an user is joint first time
+      //2.- When an user is connected after a while
+
+      if (data.content.indexOf("has joint to this group") > -1) {
+        let newUserJoint = data.author;
+        newUserJoint["isActive"] = true;
+        app.users = app.users.concat(newUserJoint);
+      } else modifyStateUsers(data.author.id, true);
+    }
+
+    console.log(data);
+    app.channels[indexChannelActive].messages.push(data);
+    localStorage.setItem(keyStorage, JSON.stringify(app));
+  }
+}
+
 function initializeConnection() {
+  attemptConnectionSocket = 0;
   if (window.performance.navigation.type == 0) {
     let user = app.currentuser;
     let messageForAll = "";
@@ -180,7 +219,7 @@ function initializeConnection() {
     if (!app.channels[0].joined) {
       let messageForYou = "Welcome " + user.username;
 
-      messageForAll = user.username + " has joined to this group";
+      messageForAll = user.username + " has joint to this group";
       app.channels[indexChannelActive].joined = true;
       app.channels[indexChannelActive].messages.push(
         createNewMessage(messageForYou, user, true)
@@ -188,10 +227,21 @@ function initializeConnection() {
     } else messageForAll = user.username + " has connected";
 
     let newMessage = createNewMessage(messageForAll, user, true);
+
     socket.send(JSON.stringify(newMessage));
     localStorage.setItem(keyStorage, JSON.stringify(app));
     if (firstConnection) listAllMessages();
     firstConnection = false;
+  }
+}
+
+function reconnectServer() {
+  console.log("Reconnection");
+  attemptConnectionSocket++;
+  if (attemptConnectionSocket < maxAttempt) connectionSocket();
+  else {
+    console.log("Server could has been shutdown");
+    attemptConnectionSocket = 0;
   }
 }
 
@@ -200,27 +250,20 @@ function connectionSocket() {
 
   socket.addEventListener("open", initializeConnection);
 
-  socket.addEventListener("close", () => {
-    console.log("Reconnection");
-    socket.close();
-    attemptConnectionSocket++;
-    if (attemptConnectionSocket < 4) connectionSocket();
-    else {
-      console.log("Server could has been shutdown");
-      attemptConnectionSocket = 0;
-    }
-  });
   socket.addEventListener("message", event => {
     if (event.data == "anyUserActive") {
-      let messageToSend = { userConnected: app.users };
+      let messageToSend = { usersConnected: app.users };
       socket.send(JSON.stringify(messageToSend));
+    } else if (event.data.indexOf("userDisconnected") > -1) {
+      let idUserDisconnected = event.data.split("|")[1] * 1;
+      modifyStateUsers(idUserDisconnected, false);
     } else {
       let receivedData = JSON.parse(event.data);
-      console.log(receivedData);
-      app.channels[indexChannelActive].messages.push(receivedData);
-      localStorage.setItem(keyStorage, JSON.stringify(app));
+      receiveMessages(receivedData);
     }
   });
+
+  socket.addEventListener("close", reconnectServer);
 }
 
 function handleAddChannelSubmit(event) {
@@ -276,5 +319,13 @@ window.onload = function() {
     listAllMessages();
   } else {
     window.location.href = "login.html";
+  }
+};
+
+window.onbeforeunload = function() {
+  let userNotActive = "userDisconnected|" + app.currentuser.id;
+  if (socket.readyState == 1) {
+    socket.send(userNotActive);
+    socket.close();
   }
 };
