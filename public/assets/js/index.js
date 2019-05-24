@@ -2,6 +2,49 @@ const keyStorage = "app-data";
 var attemptConnectionSocket = 0;
 var indexChannelActive = 0;
 var app, socket;
+var firstConnection = true;
+var fakemessages = [
+  {
+    id: 1,
+    author: { id: 1, username: "admin" },
+    content: "Hi everyone",
+    date: new Date("2019-05-20T11:00"),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 2,
+    author: { id: 3, username: "user3" },
+    content: "Hi admin, how are you?",
+    date: new Date("2019-05-20T11:01"),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 3,
+    author: { id: 3, username: "user3" },
+    content: "Whats up everyone!",
+    date: new Date("2019-05-20T11:03"),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 4,
+    author: { id: 3, username: "user3" },
+    content: "Hi, this message should appear in a new date block",
+    date: new Date("2019-05-21T15:00"),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 5,
+    author: { id: 1, username: "admin" },
+    content: "Nice",
+    date: new Date("2019-05-21T18:00"),
+    isNew: true,
+    isNotification: false
+  }
+];
 
 function createNewChannel(name, author) {
   return {
@@ -46,6 +89,84 @@ function listChannels() {
   channelList.innerHTML = elements;
 }
 
+function newNotificationElement(message) {
+  return `
+  <li class="container-notification -b-top">
+    <svg><use xlink:href="#arrow-right"/></svg>
+    <span class="group-notification">${message.content.replace(
+      message.author.username,
+      `<span class='user'>${message.author.username}</span>`
+    )}</span>
+    <span class="date">${Date(message.date)}</span>
+  </li>
+  `;
+}
+
+function newMessageBlockHeader(message) {
+  return `
+  <li class="container-messages -b-top">
+    <div class="user-img">
+      <img
+        src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
+        alt="user-image"
+      />
+    </div>
+    <div class="user-messages">
+      <ul>
+        <li class="container-user">
+          <span class="user">${message.author.username}</span>
+          <span class="date">${message.date}</span>
+        </li>
+  `;
+}
+
+function newMessageBlockFooter() {
+  return `
+        </ul>
+    </div>
+  </li>
+  `;
+}
+
+function newMessageBlockElement(message) {
+  return `
+    <li class="talk">${message.content}</li>
+  `;
+}
+
+function listAllMessages() {
+  let messaggesList = "";
+  let arrayOfMessages = app.channels[indexChannelActive].messages;
+
+  arrayOfMessages.forEach((message, index, messages) => {
+    if (message.hasOwnProperty("isNotification")) {
+      if (index == 0 || messages[index - 1].isNotification) {
+        if (message.isNotification) {
+          messaggesList += newNotificationElement(message);
+          message.isNew = false;
+        } else {
+          messaggesList += newMessageBlockHeader(message);
+          messaggesList += newMessageBlockElement(message);
+          message.isNew = false;
+        }
+      } else if (messages[index - 1].author.id != message.author.id) {
+        messaggesList += newMessageBlockFooter();
+        messaggesList += newMessageBlockHeader(message);
+        messaggesList += newMessageBlockElement(message);
+        message.isNew = false;
+      } else {
+        messaggesList += newMessageBlockElement(message);
+        message.isNew = false;
+      }
+    }
+  });
+  if (!arrayOfMessages[arrayOfMessages.length - 1].isNotification) {
+    messaggesList += newMessageBlockFooter();
+  }
+  let $messagesContainer = document.getElementById("messages_container");
+  $messagesContainer.innerHTML = messaggesList;
+}
+
 function initializeConnection() {
   if (window.performance.navigation.type == 0) {
     let user = app.currentuser;
@@ -64,6 +185,8 @@ function initializeConnection() {
     let newMessage = createNewMessage(messageForAll, user, true);
     socket.send(JSON.stringify(newMessage));
     localStorage.setItem(keyStorage, JSON.stringify(app));
+    if (firstConnection) listAllMessages();
+    firstConnection = false;
   }
 }
 
@@ -140,6 +263,7 @@ window.onload = function() {
     app = JSON.parse(storedData);
     assignEvents();
     listChannels();
+    listAllMessages();
   } else {
     window.location.href = "login.html";
   }
