@@ -83,7 +83,12 @@ function addChannel(name, author) {
 function listChannels() {
   let elements = "";
   app.channels.forEach(channel => {
-    elements += `<li>${channel.name}</li>`;
+    elements += `
+    <li class="text_channels">
+      <svg><use xlink:href="#hashtag"></svg>
+      <span class="each_channel">${channel.name}</span>
+    </li>
+    `;
   });
   let channelList = document.getElementById("channels_list");
   channelList.innerHTML = elements;
@@ -263,7 +268,7 @@ window.onload = function() {
     app = JSON.parse(storedData);
     assignEvents();
     listChannels();
-    listAllMessages();
+    // listAllMessages();
   } else {
     window.location.href = "login.html";
   }
