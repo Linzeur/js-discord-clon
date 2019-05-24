@@ -29,6 +29,143 @@ body {
   grid-area: chat-room;
 }
 
+.channels {
+  background-color: #2f3136;
+  position: relative;
+}
+
+.text_channels {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #8e9297;
+}
+
+.text_channels:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+.each_channel:hover {
+  color: #fff;
+  cursor: pointer;
+}
+#channels_list {
+  list-style: none;
+  color: #8e9297;
+}
+
+.icon-1_QxNX {
+  color: #8e9297;
+  display: block;
+}
+
+#addChannelForm {
+  margin: 0px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  height: 30px;
+}
+
+.add_channel {
+  width: 70%;
+  border-radius: 5px;
+  border: none;
+  height: 65%;
+}
+
+.add_button {
+  border-radius: 5px;
+  border: none;
+  height: 70%;
+}
+
+.channel_section_bottom {
+  background: rgba(32,34,37,.3);
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 40px;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 3%;
+}
+
+.channel_bottom {
+  width: 12%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:0 2%;
+}
+
+.channel_bottom2 {
+  width: 44%;
+  height: 100%;
+  padding-left: 3%;
+}
+
+.channel_user_logo {
+  border-radius: 50%;
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.channel_status {
+  position: absolute;
+  background-color: #43b581;
+  border: 2px solid #2f3136;
+  width: 10px;
+  height: 10px;
+  bottom: 9px;
+  border-radius: 7px;
+  left: 9%;
+}
+
+.channel_username {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 84px;
+}
+
+.channel_user_id {
+  display: block;
+    margin-top: 4px;
+    opacity: .4;
+    font-size: 10px;
+}
+
+.icon_button_micro,
+.icon_button_settings,
+.icon_button_audio {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  position: relative;
+  opacity: .6;
+  border: none;
+  cursor: pointer;
+  margin: 0px 3px;
+}
+
+.icon_button_micro:hover,
+.icon_button_settings:hover,
+.icon_button_audio:hover {
+  opacity: 1;
+}
+
+/* =============================== */
+/* ==========CHANNEL HEADER=================== */
+
 .channel-header,
 .chat-room {
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
