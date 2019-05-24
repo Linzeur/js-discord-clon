@@ -45,7 +45,7 @@ body {
 .app-name svg {
   width: 28px;
   height: 28px;
-  fill: #BDC0C1;
+  fill: #8e9297;
 }
 
 .channels {
@@ -66,9 +66,9 @@ body {
 }
 
 .text_channels svg {
-  width: 24px;
-   height: 24px;
-   fill: #BDC0C1;
+  width: 22px;
+   height: 22px;
+   fill: #8e9297;
 }
 
 .each_channel:hover {
@@ -77,7 +77,7 @@ body {
 }
 #channels_list {
   list-style: none;
-  color: #BDC0C1;
+  color: #8e9297;
 }
 
 #addChannelForm {

@@ -40,35 +40,40 @@ var app = {
           author: { id: 1, username: "admin" },
           content: "Hi everyone",
           date: new Date("2019-05-20T11:00"),
-          state: "disable"
+          isNew: true,
+          isNotification: false
         },
         {
           id: 2,
           author: { id: 2, username: "user2" },
           content: "Hi admin, how are you?",
           date: new Date("2019-05-20T11:01"),
-          state: "disable"
+          isNew: true,
+          isNotification: false
         },
         {
           id: 3,
           author: { id: 3, username: "user3" },
           content: "Whats up everyone!",
           date: new Date("2019-05-20T11:03"),
-          state: "disable"
+          isNew: true,
+          isNotification: false
         },
         {
           id: 4,
           author: { id: 4, username: "admin" },
           content: "Hi, this message should appear in a new date block",
           date: new Date("2019-05-21T15:00"),
-          state: "new"
+          isNew: true,
+          isNotification: false
         },
         {
           id: 5,
           author: { id: 1, username: "admin" },
           content: "Nice",
           date: new Date("2019-05-21T18:00"),
-          state: "new"
+          isNew: true,
+          isNotification: false
         }
       ]
     },
