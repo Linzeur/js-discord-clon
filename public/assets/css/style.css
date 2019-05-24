@@ -194,7 +194,6 @@ body {
   position: relative;
   opacity: 0.6;
   border: none;
- 
 }
 
 .button_micro {
@@ -252,6 +251,12 @@ body {
   fill: #72767d;
 }
 
+.channel-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .channel-option svg {
   fill: #b9bbbe;
 }
@@ -262,25 +267,32 @@ body {
 }
 
 .search {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 2px;
+  font-size: 15px;
+  border-radius: 5px;
+  background-color: #202225;
+}
+
+.search svg {
+  margin: 0;
 }
 
 .input-search {
-  display: none;
-  width: calc(100% - 20px);
   border: none;
-  margin-top: 20px;
-  padding: 10px 10px;
-  font-size: 15px;
-  color: #f6f6f7;
   border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  background-color: rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  color: #b9bbbe;
+  background-color: #202225;
+  transition: all 0.25s;
+  width: 10vw;
 }
 
 .input-search:focus {
-  border: 1px solid #7289da;
   outline: none;
+  width: 15vw;
 }
 
 .chat-room {
@@ -313,10 +325,6 @@ body {
 
 .-b-top {
   border-top: 1px solid hsla(0, 0%, 100%, 0.06);
-}
-
-.-b-bottom {
-  border-bottom: 1px solid hsla(0, 0%, 100%, 0.06);
 }
 
 .line::after,
@@ -395,20 +403,11 @@ body {
 }
 
 .chat-footer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   padding: 10px;
 }
 
 .chat-footer svg {
   margin: 0 10px;
-}
-
-.-normal {
-  fill: #fff;
-  width: 24px;
-  height: 24px;
 }
 
 .-effect {
@@ -420,6 +419,33 @@ body {
 .-effect:hover {
   cursor: pointer;
   fill: #fff;
-  width: 24px;
-  height: 24px;
+  transform: scale(1.2);
+}
+
+.container-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5px;
+  background-color: rgba(114, 118, 125, 0.3);
+  margin: 2px;
+  padding: 10px;
+}
+
+.write-message {
+  width: 100%;
+}
+
+.write-message input[type="text"] {
+  width: 100%;
+  padding-left: 5px;
+  border: none;
+  font-size: 14px;
+  color: #f6f6f7;
+  border-left: 1px solid #55585d;
+  background-color: rgb(72, 75, 81);
+}
+
+.write-message input[type="text"]:focus {
+  outline: none;
 }

@@ -53,17 +53,22 @@
         <symbol id="gif" viewBox="0 0 24 18">
           <path d="M3,0 L21,0 C22.6568542,-3.04359188e-16 24,1.34314575 24,3 L24,15 C24,16.6568542 22.6568542,18 21,18 L3,18 C1.34314575,18 2.02906125e-16,16.6568542 0,15 L0,3 C-2.02906125e-16,1.34314575 1.34314575,-5.83819232e-16 3,-8.8817842e-16 Z M11,5 L11,13 L13,13 L13,5 L11,5 Z M8,5 L4,5 C3.28,5 3,5.33333333 3,6 L3,12 C3,12.6666667 3.28,13 4,13 L8,13 C8.72,13 9,12.6666667 9,12 L9,8 L6,8 L6,10 L7,10 L7,11 L5,11 L5,7 L9,7 L9,6 C9,5.33333333 8.72,5 8,5 Z M21,7 L21,5 L15,5 L15,13 L17,13 L17,10 L20,10 L20,8 L17,8 L17,7 L21,7 Z"></path>
         </symbol>
-        <symbol id="micro-button" viewBox="0 0 24 24">
+        <symbol id="microphone" viewBox="0 0 24 24">
                 <path fill="#FFFFFF" d="M7,4.4408921e-16 C8.65685425,0 10,1.34314575 10,3 L10,9 C10,10.6568542 8.65685425,12 7,12 C5.34314575,12 4,10.6568542 4,9 L4,3 C4,1.34314575 5.34314575,4.4408921e-16 7,0 L7,4.4408921e-16 Z M14,9 C14,12.53 11.39,15.44 8,15.93 L8,19 L6,19 L6,15.93 C2.61,15.44 0,12.53 0,9 L2,9 C2,11.7614237 4.23857625,14 7,14 C9.76142375,14 12,11.7614237 12,9 L14,9 L14,9 Z" transform="translate(5 3)"></path>
         </symbol>
-        <symbol id="audio-button" viewBox="0 0 24 24">          
+        <symbol id="audio" viewBox="0 0 24 24">          
           <path fill="#FFFFFF" d="M3,11 C3,6 7,2 12,2 L12,4 C8.13400675,4 5,7.13400675 5,11 L5,13 L9,13 L9,21 L6,21 C4.34314575,21 3,19.6568542 3,18 L3,11 Z M21,11 L21,18 C21,19.6568542 19.6568542,21 18,21 L15,21 L15,13 L19,13 L19,11 C19,7.13400675 15.8659932,4 12,4 L12,2 C17,2 21,6 21,11 Z">
         </path>        
       </symbol>
-      <symbol id="setting-button" aria-hidden="true" viewBox="0 0 24 24">
+      <symbol id="setting" aria-hidden="true" viewBox="0 0 24 24">
           <path d="M19.738 10H22V14H19.739C19.498 14.931 19.1 15.798 18.565 16.564L20 18L18 20L16.565 18.564C15.797 19.099 14.932 19.498 14 19.738V22H10V19.738C9.069 19.498 8.203 19.099 7.436 18.564L6 20L4 18L5.436 16.564C4.901 15.799 4.502 14.932 4.262 14H2V10H4.262C4.502 9.068 4.9 8.202 5.436 7.436L4 6L6 4L7.436 5.436C8.202 4.9 9.068 4.502 10 4.262V2H14V4.261C14.932 4.502 15.797 4.9 16.565 5.435L18 3.999L20 5.999L18.564 7.436C19.099 8.202 19.498 9.069 19.738 10ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path>
       </symbol>
-
+        <symbol id="smile" viewBox="0 0 16 16">
+          <path d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"/>
+          <path d="M8 13.2c-2 0-3.8-1.2-4.6-3.1l0.9-0.4c0.6 1.5 2.1 2.4 3.7 2.4s3.1-1 3.7-2.4l0.9 0.4c-0.8 2-2.6 3.1-4.6 3.1z"/>
+          <path d="M7 6c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z"/>
+          <path d="M11 6c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z"/>
+        </symbol>
       </svg>
     </div>
     <section class="app-name">
@@ -80,14 +85,8 @@
         <svg><use xlink:href="#pin"></svg>
         <svg><use xlink:href="#people"></svg>
         <form action="" class="search">
-            <label for="input-search" aria-label="add search"></label>
-          <input
-            class="input-search"
-            type="text"
-            placeholder="Search"
-            title="You can change this later."
-          />
-          <br />
+          <label for="input-search" aria-label="add search"></label>
+          <input class="input-search" type="text" placeholder="Search" title="You can change this later."/>          
           <label for="submit_search" aria-label="Submit search"></label>
           <input hidden class="submit_search" type="submit"></input>
         </form>
@@ -139,16 +138,15 @@
         <div class="channel_bottom3">
           <div class="buttons">
             <button class="button_micro" role="button" aria-hidden="true" aria-label = "set micro" value="micro">              
-                <svg><use xlink:href="#micro-button" ></svg>
+                <svg><use xlink:href="#microphone" ></svg>
             </button>
             <button
               class="button_audio" role="button" aria-hidden="true" aria-label = "set audio" value="audio">
-              <svg><use xlink:href="#audio-button" ></svg>
+              <svg><use xlink:href="#audio" ></svg>
             </button>
             <button
               class="button_settings" role="button" aria-hidden="true"  aria-label = "set settings" value="settings">              
-              <svg><use xlink:href="#setting-button" ></svg>
-              
+              <svg><use xlink:href="#setting" ></svg>              
             </button>
           </div>
         </div>
@@ -221,25 +219,27 @@
         </div>
       </div>
       <div class="chat-footer">
-        <svg class="-normal"><use xlink:href="#plus"></svg>
+        <div class="container-footer">
+          <svg class="-effect"><use xlink:href="#plus"></svg>
           <div class="write-message">
             <form action="" id="sendMessageForm" >
                 <label for="txtMessage" aria-label="Recieve message"></label>
               <input
                 type="text"
                 id="txtMessage"
-                placeholder="test message"
+                placeholder="send message to #general"
               />
               <br />
-              <label for="submit-message" aria-label="Submit message"></label>
-              <input class="submit-message" type="submit" value="Send"></input>
+              <input hidden type="submit" value="Send"></input>
             </form>
           </div>
           <svg class="-effect"><use xlink:href="#gift"></svg>
           <svg class="-effect"><use xlink:href="#gif"></svg>
+          <svg class="-effect"><use xlink:href="#smile"></svg>
+        </div>
       </div>
     </section>
     <script src="./assets/js/db-fake.js"></script>
-    <script src="./assets/js/index.js"></script>
+    <!-- <script src="./assets/js/index.js"></script> -->
   </body>
 </html>
