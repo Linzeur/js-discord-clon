@@ -119,95 +119,12 @@
             <svg><use xlink:href="#plus"></svg>
           </div>
           <div class="channel-body-list">
-            <ul id="channels-list">
-              <li class="active">
-                <div class="channel-item">
-                  <svg><use xlink:href="#hashtag"></svg>
-                  <span>general</span>
-                </div>
-                <div class="channel-item-option">
-                  <svg><use xlink:href="#people-plus"></svg>
-                  <svg><use xlink:href="#setting"></svg>
-                </div>
-              </li>
-              <li>
-                <div class="channel-item">
-                  <svg><use xlink:href="#hashtag"></svg>
-                  <span>Able</span>
-                </div>
-                <div class="channel-item-option">
-                  <svg><use xlink:href="#people-plus"></svg>
-                  <svg><use xlink:href="#setting"></svg>
-                </div>
-              </li>
-              <li>
-                <div class="channel-item">
-                  <svg><use xlink:href="#hashtag"></svg>
-                  <span>Codeble</span>
-                </div>
-                <div class="channel-item-option">
-                  <svg><use xlink:href="#people-plus"></svg>
-                  <svg><use xlink:href="#setting"></svg>
-                </div>
-              </li>
-              <form id="addChannelForm">
-                <label for="add-channel" aria-label="add new channel"></label>
-                <input id="add-channel" type="text" name="newChannelName" placeholder="New channel"/>
-              </form>
-              <span id="channelError">
-                <svg><use xlink:href="#plus-circle"></svg>
-                error
-              </span>
-            </ul>
-          </div>
-          <div class="channel-header-list">
-            <div class="header-name">
-              <svg><use xlink:href="#arrow"></svg>
-              <span>VOICE CHANNELS</span>
-            </div>
-            <svg><use xlink:href="#plus"></svg>
-          </div>
-          <div class="channel-body-list">
-            <ul id="channels-list">
-              <li class="active">
-                <div class="channel-item">
-                  <svg><use xlink:href="#hashtag"></svg>
-                  <span>general</span>
-                </div>
-                <div class="channel-item-option">
-                  <svg><use xlink:href="#people-plus"></svg>
-                  <svg><use xlink:href="#setting"></svg>
-                </div>
-              </li>
-              <li>
-                <div class="channel-item">
-                  <svg><use xlink:href="#hashtag"></svg>
-                  <span>Able</span>
-                </div>
-                <div class="channel-item-option">
-                  <svg><use xlink:href="#people-plus"></svg>
-                  <svg><use xlink:href="#setting"></svg>
-                </div>
-              </li>
-              <li>
-                <div class="channel-item">
-                  <svg><use xlink:href="#hashtag"></svg>
-                  <span>Codeble</span>
-                </div>
-                <div class="channel-item-option">
-                  <svg><use xlink:href="#people-plus"></svg>
-                  <svg><use xlink:href="#setting"></svg>
-                </div>
-              </li>
-              <form id="addChannelForm">
-                <label for="add-channel" aria-label="add new channel"></label>
-                <input id="add-channel" type="text" name="newChannelName" placeholder="New channel"/>
-              </form>
-              <span id="channelError">
-                <svg><use xlink:href="#plus-circle"></svg>
-                error
-              </span>
-            </ul>
+            <ul id="channels-list" class="group-channels-list"></ul>
+            <form id="addChannelForm">
+              <label for="add-channel" aria-label="add new channel"></label>
+              <input id="add-channel" type="text" name="newChannelName" placeholder="Add new channel" autocomplete="off"/>
+            </form>
+            <span id="channelError"></span>
           </div>
         </div>
       </div>
@@ -310,6 +227,7 @@
                   type="text"
                   id="txtMessage"
                   placeholder="send message to #general"
+                  autocomplete="off"
                 />
                 <br />
                 <input hidden type="submit" value="Send"></input>

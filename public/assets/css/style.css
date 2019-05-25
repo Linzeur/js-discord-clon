@@ -105,13 +105,13 @@ body {
   fill: #dcddde;
 }
 
-#channels-list {
+.group-channels-list {
   margin: 5px 0;
   padding: 0;
   list-style: none;
 }
 
-#channels-list li {
+.group-channels-list li {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -121,7 +121,7 @@ body {
   border-radius: 5px;
 }
 
-#channels-list .active {
+.group-channels-list .active {
   background-color: #40444b;
 }
 
@@ -133,17 +133,17 @@ body {
   color: #fff;
 }
 
-#channels-list .active:hover {
+.group-channels-list .active:hover {
   cursor: auto;
   background-color: #40444b;
 }
 
-#channels-list li:hover {
+.group-channels-list li:hover {
   cursor: pointer;
   background-color: #292b2f;
 }
 
-#channels-list li:hover .channel-item-option svg {
+.group-channels-list li:hover .channel-item-option svg {
   visibility: visible;
 }
 
@@ -187,6 +187,7 @@ body {
   padding: 5px;
   color: #b9bbbe;
   background-color: #202225;
+  width: 95%;
 }
 
 #add-channel:focus {
@@ -197,7 +198,8 @@ body {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  color: rgb(170, 18, 18);
+  color: #ff0000cc;
+  padding-top: 10px;
 }
 
 #channelError svg {
