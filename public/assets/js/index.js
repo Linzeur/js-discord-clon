@@ -71,8 +71,18 @@ function createNewMessage(message, author, typeMessage) {
   };
 }
 
+function formatName(name) {
+  let nameFormated = name.replace(/</g, "&lt;");
+  nameFormated = nameFormated.replace(/>/g, "&gt;");
+  nameFormated = nameFormated.replace(/"/g, "&quot;");
+  nameFormated = nameFormated.replace(/'/g, "&apos;");
+  return nameFormated;
+}
+
 function addChannel(name, author) {
   if (name.length == 0) return -1;
+
+  name = formatName(name);
 
   if (!app.channels.some(channel => channel.name == name)) {
     let newChannel = createNewChannel(name, author);
@@ -90,15 +100,24 @@ function addChannel(name, author) {
 
 function listChannels() {
   let elements = "";
+  let channelActive = "";
   app.channels.forEach((channel, index) => {
+    if (index == 0) channelActive = "active";
+    else channelActive = "";
     elements += `
-    <li class="text_channels" data-index-channel="${index}">
-      <svg><use xlink:href="#hashtag"></svg>
-      <span class="each_channel">${channel.name}</span>
+    <li class="${channelActive}" data-index-channel="${index}">
+      <div class="channel-item">
+        <svg><use xlink:href="#hashtag"></svg>
+        <span>${channel.name}</span>
+      </div>
+      <div class="channel-item-option">
+        <svg><use xlink:href="#people-plus"></svg>
+        <svg><use xlink:href="#setting"></svg>
+      </div>
     </li>
     `;
   });
-  let channelList = document.getElementById("channels_list");
+  let channelList = document.getElementById("channels-list");
   channelList.innerHTML = elements;
 }
 
@@ -354,7 +373,7 @@ function reconnectServer() {
 }
 
 function connectionSocket() {
-  socket = new WebSocket("ws://192.168.86.55:3000");
+  socket = new WebSocket("ws://localhost:3000");
 
   socket.addEventListener("open", initializeConnection);
 
@@ -371,6 +390,7 @@ function connectionSocket() {
       let receivedData = JSON.parse(data.split("|")[1]);
       if (receivedData.author.id != app.currentuser.id) {
         app.channels.push(receivedData);
+        listChannels();
         if (stateNotification == "granted") {
           const notification = new Notification("New channel was created", {
             body: `The name of channel is ${receivedData.name}`,
@@ -410,9 +430,11 @@ function handleAddChannelSubmit(event) {
     $newChannelName.value = "";
     localStorage.setItem(keyStorage, JSON.stringify(app));
   } else if (result == 0) {
-    $error.innerText = "This channel already exists";
+    $error.innerHTML = `<svg><use xlink:href="#plus-circle"></svg>
+                        This channel already exists`;
   } else {
-    $error.innerText = "Invalid channel name";
+    $error.innerHTML = `<svg><use xlink:href="#plus-circle"></svg>
+                        Invalid channel name`;
   }
 }
 
@@ -420,8 +442,9 @@ function handleAddMessageSubmit(event) {
   event.preventDefault();
   let $message = document.getElementById("txtMessage");
   if ($message.value.trim().length != 0) {
+    $message.value = formatName($message.value.trim());
     let user = app.currentuser;
-    let newMessage = createNewMessage($message.value.trim(), user, false);
+    let newMessage = createNewMessage($message.value, user, false);
     socket.send(JSON.stringify(newMessage));
     $message.value = "";
   }
@@ -441,10 +464,10 @@ window.onload = function() {
   let storedData = localStorage.getItem(keyStorage);
   if (storedData) {
     app = JSON.parse(storedData);
-    let sectionInfoUser = document.getElementsByClassName("channel_bottom2")[0];
+    let sectionInfoUser = document.getElementsByClassName("data-user")[0];
     let listChilds = sectionInfoUser.children;
     listChilds[0].innerText = app.currentuser.username;
-    listChilds[1].innerText = app.currentuser.id;
+    listChilds[1].innerText = "#" + app.currentuser.id;
     assignEvents();
     listChannels();
     listAllMessages();

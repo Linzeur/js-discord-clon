@@ -72,7 +72,7 @@ function reconnectServer() {
 }
 
 function connectionSocket() {
-  socket = new WebSocket("ws://192.168.86.55:3000");
+  socket = new WebSocket("ws://localhost:3000");
 
   socket.addEventListener("open", askConnectedMembers);
 
