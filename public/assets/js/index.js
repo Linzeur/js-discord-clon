@@ -72,11 +72,11 @@ function createNewMessage(message, author, typeMessage) {
 }
 
 function formatName(name) {
-  let nameFormated = name.replace(/</g, "&lt;");
-  nameFormated = nameFormated.replace(/>/g, "&gt;");
-  nameFormated = nameFormated.replace(/"/g, "&quot;");
-  nameFormated = nameFormated.replace(/'/g, "&apos;");
-  return nameFormated;
+  let nameFormatted = name.replace(/</g, "&lt;");
+  nameFormatted = nameFormatted.replace(/>/g, "&gt;");
+  nameFormatted = nameFormatted.replace(/"/g, "&quot;");
+  nameFormatted = nameFormatted.replace(/'/g, "&apos;");
+  return nameFormatted;
 }
 
 function addChannel(name, author) {
@@ -174,9 +174,18 @@ function newMessageBlockFooter() {
 }
 
 function newDateSeparator(date) {
+  let now = new Date();
+  let today = now.getDate();
+  now.setDate(-1);
+  let yesterday = now.getDate();
+  date = new Date(date);
+  let dateFormatted = date.toDateString();
+  if (date.getDate() == today) dateFormatted = "Today";
+  else if (date.getDate() == yesterday) dateFormatted = "Yesterday";
+
   return `
     <li class="line">
-      <span class="line-date">${new Date(date).toDateString()}</span>
+      <span class="line-date">${dateFormatted}</span>
     </li>
   `;
 }
