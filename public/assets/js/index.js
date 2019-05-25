@@ -3,8 +3,8 @@ const maxAttempt = 20;
 
 var attemptConnectionSocket = 0;
 var indexChannelActive = 0;
-var app, socket;
 var firstConnection = true;
+var app, socket, stateNotification;
 var fakemessages = [
   {
     id: 1,
@@ -77,6 +77,11 @@ function addChannel(name, author) {
   if (!app.channels.some(channel => channel.name == name)) {
     let newChannel = createNewChannel(name, author);
     app.channels.push(newChannel);
+    newChannel.joined = false;
+
+    if (socket.readyState == 1)
+      socket.send("newChannel|" + JSON.stringify(newChannel));
+
     return 1;
   }
 
@@ -95,6 +100,15 @@ function listChannels() {
   });
   let channelList = document.getElementById("channels_list");
   channelList.innerHTML = elements;
+}
+
+function goToChannelFirstTime(indexListChannel) {
+  app.channels[indexChannelActive].visibility = false;
+  indexChannelActive = indexListChannel;
+  app.channels[indexChannelActive].visibility = true;
+  app.channels[indexChannelActive].joined = true;
+  console.log(indexChannelActive);
+  console.log(app.channels[indexChannelActive].name);
 }
 
 function newNotificationElement(message) {
@@ -236,6 +250,22 @@ function receiveMessages(data) {
   }
 }
 
+async function createNotificationAPI() {
+  stateNotification = Notification.permission;
+  switch (stateNotification) {
+    case "granted": {
+      return;
+    }
+    case "denied": {
+      console.log("Doesn't has permissions");
+      return;
+    }
+    case "default": {
+      stateNotification = await Notification.requestPermission();
+    }
+  }
+}
+
 function initializeConnection() {
   attemptConnectionSocket = 0;
   if (window.performance.navigation.type == 0) {
@@ -261,6 +291,7 @@ function initializeConnection() {
       firstConnection = false;
     }
   }
+  createNotificationAPI();
 }
 
 function reconnectServer() {
@@ -279,15 +310,33 @@ function connectionSocket() {
   socket.addEventListener("open", initializeConnection);
 
   socket.addEventListener("message", event => {
-    if (event.data == "anyUserActive") {
+    let data = event.data;
+    if (data == "anyUserActive") {
       let messageToSend = { usersConnected: app.users };
       socket.send(JSON.stringify(messageToSend));
-    } else if (event.data.indexOf("userDisconnected") > -1) {
-      let idUserDisconnected = event.data.split("|")[1] * 1;
+    } else if (data.indexOf("userDisconnected") > -1) {
+      let idUserDisconnected = data.split("|")[1] * 1;
       modifyStateUsers(idUserDisconnected, false);
       localStorage.setItem(keyStorage, JSON.stringify(app));
-    } else if (event.data.indexOf("usersConnected") == -1) {
-      let receivedData = JSON.parse(event.data);
+    } else if (data.indexOf("newChannel") > -1) {
+      let receivedData = JSON.parse(data.split("|")[1]);
+      if (receivedData.author.id != app.currentuser.id) {
+        app.channels.push(receivedData);
+        if (stateNotification == "granted") {
+          const notification = new Notification("New channel was created", {
+            body: `The name of channel is ${receivedData.name}`,
+            icon: "/assets/img/discord_icon.ico",
+            image: "/assets/img/discord_icon.ico"
+          });
+          notification.addEventListener(
+            "click",
+            goToChannelFirstTime.bind(null, app.channels.length - 1)
+          );
+        }
+        localStorage.setItem(keyStorage, JSON.stringify(app));
+      }
+    } else if (data.indexOf("usersConnected") == -1) {
+      let receivedData = JSON.parse(data);
       receiveMessages(receivedData);
     }
   });
