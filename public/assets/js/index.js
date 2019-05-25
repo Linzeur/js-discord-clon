@@ -254,13 +254,6 @@ async function createNotificationAPI() {
   stateNotification = Notification.permission;
   switch (stateNotification) {
     case "granted": {
-      // const notification = new Notification("werwerwer", {
-      //   body: "sss",
-      //   icon: "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
-      //   image: "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
-      //   badget: "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
-      //   requireInteraction: true
-      // });
       return;
     }
     case "denied": {
@@ -332,8 +325,8 @@ function connectionSocket() {
         if (stateNotification == "granted") {
           const notification = new Notification("New channel was created", {
             body: `The name of channel is ${receivedData.name}`,
-            icon: "/assets/img/userlogo.png",
-            image: "/assets/img/userlogo.png"
+            icon: "/assets/img/discord_icon.ico",
+            image: "/assets/img/discord_icon.ico"
           });
           notification.addEventListener(
             "click",
