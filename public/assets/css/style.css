@@ -57,7 +57,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #bdc0c1;
+  color: #BDC0C1;
 }
 
 .text_channels:hover {
@@ -66,8 +66,8 @@ body {
 }
 
 .text_channels svg {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   fill: #8e9297;
 }
 
