@@ -444,7 +444,7 @@ window.onload = function() {
     let sectionInfoUser = document.getElementsByClassName("channel_bottom2")[0];
     let listChilds = sectionInfoUser.children;
     listChilds[0].innerText = app.currentuser.username;
-    listChilds[1].innerText = app.currelistChildsntuser.id;
+    listChilds[1].innerText = app.currentuser.id;
     assignEvents();
     listChannels();
     listAllMessages();
