@@ -94,7 +94,7 @@
       <div class="channel-option">
         <svg><use xlink:href="#bel"></svg>
         <svg><use xlink:href="#pin"></svg>
-        <svg><use xlink:href="#people"></svg>
+        <svg id="btnPeople" onclick="showMemberList()" class=""><use xlink:href="#people"></svg>
         <div class="search">
           <form action="">
             <label for="input-search" aria-label="add search"></label>
@@ -321,8 +321,7 @@
           </div>
         </div>
       </div>
-      <div class="container-member">
-        <svg><use xlink:href="#arrow" ></svg>
+      <div id="divMembers" class="container-member">
         <div class="member-list">
           <span class="state">ONLINE 2</span>
             <div class="block-user">
@@ -367,6 +366,7 @@
       </div>
     </section>
     <script src="./assets/js/db-fake.js"></script>
-    <script src="./assets/js/index.js"></script> 
+    <!-- <script src="./assets/js/index.js"></script>  -->
+    <script src="./assets/js/action.js"></script>
   </body>
 </html>

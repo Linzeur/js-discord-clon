@@ -305,6 +305,10 @@ body {
   cursor: pointer;
 }
 
+.svg-active {
+  fill: #fff !important;
+}
+
 .search {
   display: flex;
   flex-direction: row;
@@ -509,36 +513,17 @@ body {
 /* ========== MEMBER LIST =================== */
 
 .container-member {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 20px;
+  display: none;
+  width: 0;
   background: #2f3136;
 }
 
-.container-member > svg {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  align-self: center;
-  fill: hsla(0, 0%, 100%, 0.4);
-  transform: rotate(90deg);
-}
-
-.container-member > svg:hover {
-  cursor: pointer;
-}
-
-.container-member:hover {
+.state-members {
+  display: flex;
   width: 300px;
 }
 
-.container-member:hover > svg {
-  transform: rotate(-90deg);
-}
-
 .member-list {
-  display: none;
   flex-direction: column;
   justify-content: flex-start;
   white-space: nowrap;
@@ -551,12 +536,12 @@ body {
   color: hsla(0, 0%, 100%, 0.4);
 }
 
-.container-member:hover .member-list {
+.member-list {
   display: flex;
   padding: 0 16px;
 }
 
-.container-member:hover .state {
+.state {
   padding: 20px 0 10px 0;
 }
 
