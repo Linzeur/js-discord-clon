@@ -103,6 +103,75 @@ body {
   fill: #dcddde;
 }
 
+#channels-list {
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+}
+
+#channels-list li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px 5px 10px;
+  margin: 3px 0;
+  border-radius: 5px;
+}
+
+#channels-list .active {
+  background-color: #40444b;
+}
+
+.active > .channel-item-option svg {
+  visibility: visible;
+}
+
+.active > .channel-item span {
+  color: #fff;
+}
+
+#channels-list .active:hover {
+  cursor: auto;
+  background-color: #40444b;
+}
+
+#channels-list li:hover {
+  cursor: pointer;
+  background-color: #292b2f;
+}
+
+#channels-list li:hover .channel-item-option svg {
+  visibility: visible;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+}
+
+.channel-item span {
+  margin-left: 5px;
+}
+
+.channel-item svg {
+  width: 20px;
+  height: 20px;
+  fill: #8e9297;
+}
+
+.channel-item-option svg {
+  visibility: hidden;
+  width: 16px;
+  height: 16px;
+  fill: #8e9297;
+}
+
+.channel-item-option svg:hover {
+  cursor: pointer;
+  fill: #dcddde;
+}
+
 /* .text_channels {
   display: flex;
   flex-direction: row;
@@ -121,14 +190,14 @@ body {
   fill: #8e9297;
 } */
 
-.each_channel:hover {
+/* .each_channel:hover {
   color: #fff;
   cursor: pointer;
-}
-#channels_list {
+} */
+/* #channels_list {
   list-style: none;
   color: #8e9297;
-}
+} */
 
 #addChannelForm {
   margin: 0px auto;
