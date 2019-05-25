@@ -30,7 +30,6 @@ body {
 }
 
 .app-name {
-  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -40,6 +39,11 @@ body {
   font-weight: 500;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #2f3136;
+}
+
+.app-name:hover {
+  cursor: pointer;
+  background-color: #222327;
 }
 
 .app-name svg {
@@ -57,13 +61,14 @@ body {
 
 .container-channels {
   color: #8e9297;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 }
 
 .channel-header-list {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 20px;
 }
 
 .header-name {
@@ -172,6 +177,40 @@ body {
   fill: #dcddde;
 }
 
+#addChannelForm {
+  padding: 5px;
+  font-size: 15px;
+  border-radius: 5px;
+  background-color: #202225;
+}
+
+#add-channel {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  color: #b9bbbe;
+  background-color: #202225;
+}
+
+#add-channel:focus {
+  outline: none;
+}
+
+#channelError {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: rgb(170, 18, 18);
+}
+
+#channelError svg {
+  fill: rgb(170, 18, 18);
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  transform: rotate(45deg);
+}
+
 /* .text_channels {
   display: flex;
   flex-direction: row;
@@ -199,7 +238,7 @@ body {
   color: #8e9297;
 } */
 
-#addChannelForm {
+/* #addChannelForm {
   margin: 0px auto;
   display: flex;
   flex-direction: row;
@@ -212,13 +251,13 @@ body {
   border-radius: 5px;
   border: none;
   height: 65%;
-}
+} */
 
-.add_button {
+/* .add_button {
   border-radius: 5px;
   border: none;
   height: 70%;
-}
+} */
 
 .container-block-user {
   display: flex;
