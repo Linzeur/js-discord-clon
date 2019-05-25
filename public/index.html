@@ -45,8 +45,11 @@
         <symbol id="arrow-right" viewBox="0 0 268.832 268.832">
           <path d="M265.171,125.577l-80-80c-4.881-4.881-12.797-4.881-17.678,0c-4.882,4.882-4.882,12.796,0,17.678l58.661,58.661H12.5   c-6.903,0-12.5,5.597-12.5,12.5c0,6.902,5.597,12.5,12.5,12.5h213.654l-58.659,58.661c-4.882,4.882-4.882,12.796,0,17.678   c2.44,2.439,5.64,3.661,8.839,3.661s6.398-1.222,8.839-3.661l79.998-80C270.053,138.373,270.053,130.459,265.171,125.577z"></path>
         </symbol>
-        <symbol id="plus" viewBox="0 0 24 24">
+        <symbol id="plus-circle" viewBox="0 0 24 24">
           <path class="attachButtonPlus-rUdX-B" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
+        </symbol>
+        <symbol id="plus" viewBox="0 0 18 18">
+          <polygon points="15 10 10 10 10 15 8 15 8 10 3 10 3 8 8 8 8 3 10 3 10 8 15 8"></polygon>
         </symbol>
         <symbol id="gift" viewBox="0 0 16 16">
           <path d="M13.9499381,4.97031408 L15,4.97031408 C15.5522847,4.97031408 16,5.42245961 16,5.98020939 L16,8 L0,8 L0,5.98020939 C-6.76353751e-17,5.42245961 0.44771525,4.97031408 1,4.97031408 L1.97920984,4.97031408 C1.01782154,3.76290607 1.11036555,1.99225385 2.23546762,0.895004171 C3.42730882,-0.267332482 5.32651446,-0.233853688 6.47746213,0.969781151 C7.07300942,1.59259093 7.63216429,2.52072721 7.97475156,3.47225991 C8.3157709,2.50516262 8.88309781,1.55764854 9.48796509,0.925092131 C10.6389128,-0.278542708 12.5381184,-0.312021502 13.7299596,0.85031515 C14.8690241,1.96118164 14.9497436,3.76226816 13.9499381,4.97031408 Z M10.635938,5 C10.734461,4.96362465 10.837387,4.92192897 10.9436159,4.87518066 C11.6535979,4.56273792 12.4171451,4.06075227 12.7190202,3.74012812 C13.103105,3.33218843 13.0920422,2.68213425 12.6943108,2.28819147 C12.2965794,1.8942487 11.6627922,1.90559543 11.2787075,2.31353512 C10.9768324,2.63415927 10.514354,3.43434591 10.2346934,4.17301099 C10.1162728,4.48579438 10.0363609,4.77004854 10,5 L10.635938,5 Z M5.25139448,5 L6,5 C5.96063336,4.77507371 5.88337351,4.50341724 5.77235412,4.20642989 C5.49198082,3.45640483 5.02832378,2.64391205 4.72567933,2.318357 C4.34061573,1.90414358 3.7052133,1.89262234 3.30646827,2.29262359 C2.90772324,2.69262485 2.89663225,3.35267626 3.28169585,3.76688968 C3.58434031,4.09244473 4.34983347,4.60215046 5.06162485,4.91939828 C5.12617993,4.94817069 5.18951835,4.97505811 5.25139448,5 Z M1,10 L7,10 L7,16 L2,16 C1.44771525,16 1,15.5522847 1,15 L1,10 Z M9,10 L15,10 L15,15 C15,15.5522847 14.5522847,16 14,16 L9,16 L9,10 Z"></path>
@@ -102,30 +105,35 @@
     </section>
     <section class="channels">
       <div class="container-channels">
-        <div class="text_channels">
-          <svg><use xlink:href="#arrow" ></svg>
-          <p class="text_channels">Text channels</p>
-        </div>
-        <div>
-          <ul id="channels_list">
-            <li class="text_channels">
-              <svg><use xlink:href="#hashtag"></svg>
-              <span class="each_channel">General</span>
-            </li>
-            <li class="text_channels">
-              <svg><use xlink:href="#hashtag"></svg>
-              <span class="each_channel">Able channel</span>
-            </li>
-            <li class="text_channels">
-              <svg><use xlink:href="#hashtag"></svg>
-              <span class="each_channel">Codeable team</span>
-            </li>
-          </ul>
-          <form id="addChannelForm">
-            <label for="add-channel" aria-label="add new channel"></label>
-            <input id="add-channel" type="text" name="newChannelName" placeholder="  New channel"/>
-          </form>
-          <span id="channelError"></span>
+        <div class="all-channels">
+          <div class="channel-header-list">
+            <div class="header-name">
+              <svg><use xlink:href="#arrow"></svg>
+              <span>TEXT CHANNELS</span>
+            </div>
+            <svg><use xlink:href="#plus"></svg>
+          </div>
+          <!-- <div class="channel-body-list">
+            <ul id="channels-list">
+              <li class="channel-item">
+                <svg><use xlink:href="#hashtag"></svg>
+                <span class="channel-item-name">General</span>
+              </li>
+              <li class="text_channels">
+                <svg><use xlink:href="#hashtag"></svg>
+                <span class="each_channel">Able channel</span>
+              </li>
+              <li class="text_channels">
+                <svg><use xlink:href="#hashtag"></svg>
+                <span class="each_channel">Codeable team</span>
+              </li>
+            </ul>
+            <form id="addChannelForm">
+              <label for="add-channel" aria-label="add new channel"></label>
+              <input id="add-channel" type="text" name="newChannelName" placeholder="  New channel"/>
+            </form>
+            <span id="channelError"></span>
+          </div> -->
         </div>
       </div>
       <div class="container-block-user">
@@ -219,7 +227,7 @@
         </div>
         <div class="chat-footer">
           <div class="container-footer">
-            <svg class="-effect"><use xlink:href="#plus"></svg>
+            <svg class="-effect"><use xlink:href="#plus-circle"></svg>
             <div class="write-message">
               <form action="" id="sendMessageForm" >
                   <label for="txtMessage" aria-label="Recieve message"></label>
@@ -244,7 +252,6 @@
           <span class="state">ONLINE 2</span>
             <div class="block-user">
               <div class="user-img -block out-tab">
-                <!-- <span class="circle-orange"></span> -->
                 <img
                   src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
                   alt="user-image"
