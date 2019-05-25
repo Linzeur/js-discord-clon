@@ -85,12 +85,15 @@
         <svg><use xlink:href="#bel"></svg>
         <svg><use xlink:href="#pin"></svg>
         <svg><use xlink:href="#people"></svg>
-        <form action="" class="search">
-          <label for="input-search" aria-label="add search"></label>
-          <input class="input-search" type="text" placeholder="Search" title="You can change this later."/>          
-          <label for="submit_search" aria-label="Submit search"></label>
-          <input hidden class="submit_search" type="submit"></input>
-        </form>
+        <div class="search">
+          <form action="">
+            <label for="input-search" aria-label="add search"></label>
+            <input class="input-search" type="text" placeholder="Search" title="You can change this later."/>          
+            <label for="submit_search" aria-label="Submit search"></label>
+            <input hidden type="submit"></input>
+          </form>
+          <svg><use xlink:href="#search"></svg>
+        </div>
         <svg><use xlink:href="#at"></svg>
         <svg><use xlink:href="#help"></svg>
       </div>
@@ -241,6 +244,6 @@
       </div>
     </section>
     <script src="./assets/js/db-fake.js"></script>
-    <script src="./assets/js/index.js"></script>
+    <!-- <script src="./assets/js/index.js"></script> -->
   </body>
 </html>
