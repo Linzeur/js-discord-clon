@@ -123,7 +123,7 @@ function newMessageBlockHeader(message) {
       <ul>
         <li class="container-user">
           <span class="user">${message.author.username}</span>
-          <span class="date">${message.date}</span>
+          <span class="date">${Date(message.date)}</span>
         </li>
   `;
 }
@@ -176,6 +176,28 @@ function listAllMessages() {
   }
 }
 
+function appendNewMessage(message) {
+  let $messages_container = document.getElementById("messages_container");
+  let arrayOfMessages = app.channels[indexChannelActive].messages;
+  let lastMessage = arrayOfMessages[arrayOfMessages.length - 1];
+
+  if (message.isNotification) {
+    $messages_container.innerHTML += newNotificationElement(message);
+  } else if (
+    lastMessage.isNotification ||
+    !(message.author.id == lastMessage.author.id)
+  ) {
+    $messages_container.innerHTML +=
+      newMessageBlockHeader(message) +
+      newMessageBlockElement(message) +
+      newMessageBlockFooter();
+  } else {
+    $messages_container.lastElementChild.lastElementChild.firstElementChild.innerHTML += newMessageBlockElement(
+      message
+    );
+  }
+}
+
 function filterOwnMessages(messageReceived) {
   return !(
     messageReceived.isNotification &&
@@ -204,6 +226,7 @@ function receiveMessages(data) {
     }
 
     console.log(data);
+    appendNewMessage(data);
     app.channels[indexChannelActive].messages.push(data);
     localStorage.setItem(keyStorage, JSON.stringify(app));
   }
@@ -296,7 +319,7 @@ function handleAddMessageSubmit(event) {
   if ($message.value.trim().length != 0) {
     let user = app.currentuser;
     let newMessage = createNewMessage($message.value.trim(), user, false);
-    app.channels[indexChannelActive].messages.push(newMessage);
+    // app.channels[indexChannelActive].messages.push(newMessage);
     socket.send(JSON.stringify(newMessage));
     $message.value = "";
   }
