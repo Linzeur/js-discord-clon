@@ -10,7 +10,7 @@ var fakemessages = [
     id: 1,
     author: { id: 1, username: "admin" },
     content: "Hi everyone",
-    date: new "2019-05-20T11:00"(),
+    date: new Date("2019-05-20T11:00"),
     isNew: true,
     isNotification: false
   },
@@ -54,7 +54,7 @@ function createNewChannel(name, author) {
     creationDate: new Date(),
     name: name,
     author: author,
-    joined: true,
+    joined: false,
     visibility: false,
     messages: []
   };
@@ -87,9 +87,11 @@ function listChannels() {
   let elements = "";
   app.channels.forEach((channel, index) => {
     elements += `
-    <li class="text_channels" data-index-channel="${index}">
+    <li class="text_channels>
       <svg><use xlink:href="#hashtag"></svg>
-      <span class="each_channel">${channel.name}</span>
+      <span class="each_channel" data-index-channel="${index}">${
+      channel.name
+    }</span>
     </li>
     `;
   });
@@ -328,6 +330,34 @@ function handleAddMessageSubmit(event) {
     $message.value = "";
   }
 }
+
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.className.includes("each_channel")) {
+    app.channels[indexChannelActive].visibility = false;
+    indexChannelActive = parseInt(e.target.getAttribute("data-index-channel"));
+
+    // Reusing code from initializeConnection function. Maybe a new function should be used.
+    let user = app.currentuser;
+    let messageForAll = "";
+
+    if (!app.channels[indexChannelActive].joined) {
+      let messageForYou = "Welcome " + user.username;
+
+      messageForAll = user.username + " has joint to this channel";
+      app.channels[indexChannelActive].joined = true;
+      app.channels[indexChannelActive].visibility = true;
+      app.channels[indexChannelActive].messages.push(
+        createNewMessage(messageForYou, user, true)
+      );
+    } else messageForAll = user.username + " has connected";
+
+    let newMessage = createNewMessage(messageForAll, user, true);
+
+    socket.send(JSON.stringify(newMessage));
+    localStorage.setItem(keyStorage, JSON.stringify(app));
+    listAllMessages();
+  }
+});
 
 function assignEvents() {
   let $formAddChannel = document.getElementById("addChannelForm");
