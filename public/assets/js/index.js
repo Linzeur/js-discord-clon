@@ -105,7 +105,7 @@ function newNotificationElement(message) {
       message.author.username,
       `<span class='user'>${message.author.username}</span>`
     )}</span>
-    <span class="date">${Date(message.date)}</span>
+    <span class="date">${new Date(message.date).toLocaleTimeString()}</span>
   </li>
   `;
 }
@@ -123,7 +123,9 @@ function newMessageBlockHeader(message) {
       <ul>
         <li class="container-user">
           <span class="user">${message.author.username}</span>
-          <span class="date">${Date(message.date)}</span>
+          <span class="date">${new Date(
+            message.date
+          ).toLocaleTimeString()}</span>
         </li>
   `;
 }
@@ -319,7 +321,6 @@ function handleAddMessageSubmit(event) {
   if ($message.value.trim().length != 0) {
     let user = app.currentuser;
     let newMessage = createNewMessage($message.value.trim(), user, false);
-    // app.channels[indexChannelActive].messages.push(newMessage);
     socket.send(JSON.stringify(newMessage));
     $message.value = "";
   }
