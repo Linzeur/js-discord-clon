@@ -1,4 +1,6 @@
 const keyStorage = "app-data";
+const maxAttempt = 20;
+
 var attemptConnectionSocket = 0;
 var indexChannelActive = 0;
 var app, socket;
@@ -77,6 +79,7 @@ function addChannel(name, author) {
     app.channels.push(newChannel);
     return 1;
   }
+
   return 0;
 }
 
@@ -143,55 +146,103 @@ function listAllMessages() {
   let messaggesList = "";
   let arrayOfMessages = app.channels[indexChannelActive].messages;
 
-  arrayOfMessages.forEach((message, index, messages) => {
-    if (message.hasOwnProperty("isNotification")) {
+  if (arrayOfMessages.length > 0) {
+    arrayOfMessages.forEach((message, index, messages) => {
       if (index == 0 || messages[index - 1].isNotification) {
         if (message.isNotification) {
           messaggesList += newNotificationElement(message);
-          message.isNew = false;
         } else {
           messaggesList += newMessageBlockHeader(message);
           messaggesList += newMessageBlockElement(message);
-          message.isNew = false;
         }
+      } else if (messages[index].isNotification) {
+        messaggesList += newMessageBlockFooter();
+        messaggesList += newNotificationElement(message);
       } else if (messages[index - 1].author.id != message.author.id) {
         messaggesList += newMessageBlockFooter();
         messaggesList += newMessageBlockHeader(message);
         messaggesList += newMessageBlockElement(message);
-        message.isNew = false;
       } else {
         messaggesList += newMessageBlockElement(message);
-        message.isNew = false;
       }
-    }
-  });
-  if (!arrayOfMessages[arrayOfMessages.length - 1].isNotification) {
-    messaggesList += newMessageBlockFooter();
+      message.isNew = false;
+    });
+
+    if (!arrayOfMessages[arrayOfMessages.length - 1].isNotification)
+      messaggesList += newMessageBlockFooter();
+
+    let $messagesContainer = document.getElementById("messages_container");
+    $messagesContainer.innerHTML = messaggesList;
   }
-  let $messagesContainer = document.getElementById("messages_container");
-  $messagesContainer.innerHTML = messaggesList;
+}
+
+function filterOwnMessages(messageReceived) {
+  return !(
+    messageReceived.isNotification &&
+    messageReceived.author.id == app.currentuser.id &&
+    messageReceived.content.indexOf("Welcome") == -1
+  );
+}
+
+function modifyStateUsers(idUser, newState) {
+  let indexUserFound = app.users.findIndex(user => user.id == idUser);
+  app.users[indexUserFound].isActive = newState;
+}
+
+function receiveMessages(data) {
+  if (filterOwnMessages(data)) {
+    if (data.isNotification) {
+      //There are two types of messages with property isNotification = true, to send:
+      //1.- When an user is joint first time
+      //2.- When an user is connected after a while
+
+      if (data.content.indexOf("has joint to this group") > -1) {
+        let newUserJoint = data.author;
+        newUserJoint["isActive"] = true;
+        app.users = app.users.concat(newUserJoint);
+      } else modifyStateUsers(data.author.id, true);
+    }
+
+    console.log(data);
+    app.channels[indexChannelActive].messages.push(data);
+    localStorage.setItem(keyStorage, JSON.stringify(app));
+  }
 }
 
 function initializeConnection() {
+  attemptConnectionSocket = 0;
   if (window.performance.navigation.type == 0) {
-    let user = app.currentuser;
-    let messageForAll = "";
+    if (firstConnection) {
+      let user = app.currentuser;
+      let messageForAll = "";
 
-    if (!app.channels[0].joined) {
-      let messageForYou = "Welcome " + user.username;
+      if (!app.channels[0].joined) {
+        let messageForYou = "Welcome " + user.username;
 
-      messageForAll = user.username + " has joined to this group";
-      app.channels[indexChannelActive].joined = true;
-      app.channels[indexChannelActive].messages.push(
-        createNewMessage(messageForYou, user, true)
-      );
-    } else messageForAll = user.username + " has connected";
+        messageForAll = user.username + " has joint to this group";
+        app.channels[indexChannelActive].joined = true;
+        app.channels[indexChannelActive].messages.push(
+          createNewMessage(messageForYou, user, true)
+        );
+      } else messageForAll = user.username + " has connected";
 
-    let newMessage = createNewMessage(messageForAll, user, true);
-    socket.send(JSON.stringify(newMessage));
-    localStorage.setItem(keyStorage, JSON.stringify(app));
-    if (firstConnection) listAllMessages();
-    firstConnection = false;
+      let newMessage = createNewMessage(messageForAll, user, true);
+
+      socket.send(JSON.stringify(newMessage));
+      localStorage.setItem(keyStorage, JSON.stringify(app));
+      listAllMessages();
+      firstConnection = false;
+    }
+  }
+}
+
+function reconnectServer() {
+  console.log("Reconnection");
+  attemptConnectionSocket++;
+  if (attemptConnectionSocket < maxAttempt) connectionSocket();
+  else {
+    console.log("Server could has been shutdown");
+    attemptConnectionSocket = 0;
   }
 }
 
@@ -200,22 +251,21 @@ function connectionSocket() {
 
   socket.addEventListener("open", initializeConnection);
 
-  socket.addEventListener("close", () => {
-    console.log("Disconnection");
-    socket.close();
-    attemptConnectionSocket++;
-    if (attemptConnectionSocket < 4) connectionSocket();
-    else {
-      console.log("Server could has been shutdown");
-      attemptConnectionSocket = 0;
+  socket.addEventListener("message", event => {
+    if (event.data == "anyUserActive") {
+      let messageToSend = { usersConnected: app.users };
+      socket.send(JSON.stringify(messageToSend));
+    } else if (event.data.indexOf("userDisconnected") > -1) {
+      let idUserDisconnected = event.data.split("|")[1] * 1;
+      modifyStateUsers(idUserDisconnected, false);
+      localStorage.setItem(keyStorage, JSON.stringify(app));
+    } else if (event.data.indexOf("usersConnected") == -1) {
+      let receivedData = JSON.parse(event.data);
+      receiveMessages(receivedData);
     }
   });
-  socket.addEventListener("message", event => {
-    let receivedData = JSON.parse(event.data);
-    console.log(receivedData);
-    app.channels[indexChannelActive].messages.push(receivedData);
-    localStorage.setItem(keyStorage, JSON.stringify(app));
-  });
+
+  socket.addEventListener("close", reconnectServer);
 }
 
 function handleAddChannelSubmit(event) {
@@ -271,5 +321,13 @@ window.onload = function() {
     listAllMessages();
   } else {
     window.location.href = "login.html";
+  }
+};
+
+window.onbeforeunload = function() {
+  let userNotActive = "userDisconnected|" + app.currentuser.id;
+  if (socket.readyState == 1) {
+    socket.send(userNotActive);
+    socket.close();
   }
 };
