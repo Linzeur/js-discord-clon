@@ -40,13 +40,6 @@ function newAppObject(newUsername) {
   return obj;
 }
 
-function createUser() {
-  event.preventDefault();
-  let username = document.getElementById("txtUsername").value;
-  let appObj = newAppObject(username);
-  localStorage.setItem(keyStorage, JSON.stringify(appObj));
-}
-
 function askConnectedMembers() {
   attemptConnectionSocket = 0;
   socket.send("anyUserActive");
@@ -90,14 +83,24 @@ function connectionSocket() {
   socket.addEventListener("close", reconnectServer);
 }
 
+function loginUser(event) {
+  event.preventDefault();
+  let txtUsername = document.getElementById("txtUsername");
+  if (txtUsername.value.trim().length > 0) {
+    let appObj = newAppObject(txtUsername.value.trim());
+    localStorage.setItem(keyStorage, JSON.stringify(appObj));
+    window.location.href = pageToRedirect;
+  } else {
+    txtUsername.focus();
+    return false;
+  }
+}
+
 function assignEvents() {
   connectionSocket();
 
   let btnContinue = document.getElementById("btnContinue");
-  btnContinue.addEventListener("click", function() {
-    createUser();
-    window.location.href = pageToRedirect;
-  });
+  btnContinue.addEventListener("click", event => loginUser(event));
 }
 
 window.onload = function() {
