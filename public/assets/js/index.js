@@ -154,6 +154,14 @@ function newMessageBlockFooter() {
   `;
 }
 
+function newDateSeparator(date) {
+  return `
+    <li class="line">
+      <span class="line-date">${new Date(date).toDateString()}</span>
+    </li>
+  `;
+}
+
 function newMessageBlockElement(message) {
   return `
     <li class="talk">${message.content}</li>
@@ -166,21 +174,41 @@ function listAllMessages() {
 
   if (arrayOfMessages.length > 0) {
     arrayOfMessages.forEach((message, index, messages) => {
-      if (index == 0 || messages[index - 1].isNotification) {
+      if (index == 0) {
+        messaggesList += newDateSeparator(message.date);
+        messaggesList += newNotificationElement(message);
+      } else if (messages[index - 1].isNotification) {
+        if (
+          index == 0 ||
+          messages[index - 1].date.getDate() != message.date.getDate()
+        ) {
+          messaggesList += newDateSeparator(message.date);
+        }
         if (message.isNotification) {
           messaggesList += newNotificationElement(message);
         } else {
           messaggesList += newMessageBlockHeader(message);
           messaggesList += newMessageBlockElement(message);
         }
-      } else if (messages[index].isNotification) {
+      } else if (message.isNotification) {
         messaggesList += newMessageBlockFooter();
+        if (messages[index - 1].date.getDate() != message.date.getDate()) {
+          messaggesList += newDateSeparator(message.date);
+        }
         messaggesList += newNotificationElement(message);
       } else if (messages[index - 1].author.id != message.author.id) {
         messaggesList += newMessageBlockFooter();
+        if (messages[index - 1].date.getDate() != message.date.getDate()) {
+          messaggesList += newDateSeparator(message.date);
+        }
         messaggesList += newMessageBlockHeader(message);
         messaggesList += newMessageBlockElement(message);
       } else {
+        if (messages[index - 1].date.getDate() != message.date.getDate()) {
+          messaggesList += newMessageBlockFooter();
+          messaggesList += newDateSeparator(message.date);
+          messaggesList += newMessageBlockHeader(message);
+        }
         messaggesList += newMessageBlockElement(message);
       }
       message.isNew = false;
@@ -278,9 +306,8 @@ function initializeConnection() {
 
         messageForAll = user.username + " has joint to this group";
         app.channels[indexChannelActive].joined = true;
-        app.channels[indexChannelActive].messages.push(
-          createNewMessage(messageForYou, user, true)
-        );
+        let msg = createNewMessage(messageForYou, user, true);
+        app.channels[indexChannelActive].messages.push(msg);
       } else messageForAll = user.username + " has connected";
 
       let newMessage = createNewMessage(messageForAll, user, true);
