@@ -10,7 +10,7 @@ var fakemessages = [
     id: 1,
     author: { id: 1, username: "admin" },
     content: "Hi everyone",
-    date: new Date("2019-05-20T11:00"),
+    date: new "2019-05-20T11:00"(),
     isNew: true,
     isNotification: false
   },
@@ -85,9 +85,9 @@ function addChannel(name, author) {
 
 function listChannels() {
   let elements = "";
-  app.channels.forEach(channel => {
+  app.channels.forEach((channel, index) => {
     elements += `
-    <li class="text_channels">
+    <li class="text_channels" data-index-channel="${index}">
       <svg><use xlink:href="#hashtag"></svg>
       <span class="each_channel">${channel.name}</span>
     </li>
@@ -105,7 +105,9 @@ function newNotificationElement(message) {
       message.author.username,
       `<span class='user'>${message.author.username}</span>`
     )}</span>
-    <span class="date">${Date(message.date)}</span>
+    <span class="date">
+    ${new Date(message.date).toLocaleTimeString()}
+    </span>
   </li>
   `;
 }
@@ -123,7 +125,9 @@ function newMessageBlockHeader(message) {
       <ul>
         <li class="container-user">
           <span class="user">${message.author.username}</span>
-          <span class="date">${message.date}</span>
+          <span class="date">
+          ${new Date(message.date).toLocaleTimeString()}
+          </span>
         </li>
   `;
 }
@@ -176,6 +180,28 @@ function listAllMessages() {
   }
 }
 
+function appendNewMessage(message) {
+  let $messages_container = document.getElementById("messages_container");
+  let arrayOfMessages = app.channels[indexChannelActive].messages;
+  let lastMessage = arrayOfMessages[arrayOfMessages.length - 1];
+
+  if (message.isNotification) {
+    $messages_container.innerHTML += newNotificationElement(message);
+  } else if (
+    lastMessage.isNotification ||
+    message.author.id != lastMessage.author.id
+  ) {
+    $messages_container.innerHTML +=
+      newMessageBlockHeader(message) +
+      newMessageBlockElement(message) +
+      newMessageBlockFooter();
+  } else {
+    $messages_container.lastElementChild.lastElementChild.firstElementChild.innerHTML += newMessageBlockElement(
+      message
+    );
+  }
+}
+
 function filterOwnMessages(messageReceived) {
   return !(
     messageReceived.isNotification &&
@@ -204,6 +230,7 @@ function receiveMessages(data) {
     }
 
     console.log(data);
+    appendNewMessage(data);
     app.channels[indexChannelActive].messages.push(data);
     localStorage.setItem(keyStorage, JSON.stringify(app));
   }
@@ -247,7 +274,7 @@ function reconnectServer() {
 }
 
 function connectionSocket() {
-  socket = new WebSocket("ws://192.168.86.81:3000");
+  socket = new WebSocket("ws://192.168.86.55:3000");
 
   socket.addEventListener("open", initializeConnection);
 
@@ -283,6 +310,7 @@ function handleAddChannelSubmit(event) {
   if (result == 1) {
     listChannels();
     $newChannelName.value = "";
+    localStorage.setItem(keyStorage, JSON.stringify(app));
   } else if (result == 0) {
     $error.innerText = "This channel already exists";
   } else {
@@ -296,7 +324,6 @@ function handleAddMessageSubmit(event) {
   if ($message.value.trim().length != 0) {
     let user = app.currentuser;
     let newMessage = createNewMessage($message.value.trim(), user, false);
-    app.channels[indexChannelActive].messages.push(newMessage);
     socket.send(JSON.stringify(newMessage));
     $message.value = "";
   }
