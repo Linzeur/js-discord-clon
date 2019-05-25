@@ -10,7 +10,7 @@ var fakemessages = [
     id: 1,
     author: { id: 1, username: "admin" },
     content: "Hi everyone",
-    date: new "2019-05-20T11:00"(),
+    date: new Date("2019-05-20T11:00"),
     isNew: true,
     isNotification: false
   },
@@ -343,6 +343,10 @@ window.onload = function() {
   let storedData = localStorage.getItem(keyStorage);
   if (storedData) {
     app = JSON.parse(storedData);
+    let sectionInfoUser = document.getElementsByClassName("channel_bottom2")[0];
+    let listChilds = sectionInfoUser.children;
+    listChilds[0].innerText = app.currentuser.username;
+    listChilds[1].innerText = app.currelistChildsntuser.id;
     assignEvents();
     listChannels();
     listAllMessages();
