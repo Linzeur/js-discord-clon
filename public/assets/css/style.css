@@ -67,8 +67,8 @@ body {
 
 .text_channels svg {
   width: 22px;
-   height: 22px;
-   fill: #8e9297;
+  height: 22px;
+  fill: #8e9297;
 }
 
 .each_channel:hover {
