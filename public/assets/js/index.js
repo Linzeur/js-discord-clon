@@ -85,9 +85,9 @@ function addChannel(name, author) {
 
 function listChannels() {
   let elements = "";
-  app.channels.forEach(channel => {
+  app.channels.forEach((channel, index) => {
     elements += `
-    <li class="text_channels">
+    <li class="text_channels" data-index-channel="${index}">
       <svg><use xlink:href="#hashtag"></svg>
       <span class="each_channel">${channel.name}</span>
     </li>
@@ -310,6 +310,7 @@ function handleAddChannelSubmit(event) {
   if (result == 1) {
     listChannels();
     $newChannelName.value = "";
+    localStorage.setItem(keyStorage, JSON.stringify(app));
   } else if (result == 0) {
     $error.innerText = "This channel already exists";
   } else {
