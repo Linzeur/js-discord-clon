@@ -10,7 +10,7 @@ var fakemessages = [
     id: 1,
     author: { id: 1, username: "admin" },
     content: "Hi everyone",
-    date: new Date("2019-05-20T11:00"),
+    date: new Date("2019-05-20T11:00").toLocaleString(),
     isNew: true,
     isNotification: false
   },
@@ -18,7 +18,7 @@ var fakemessages = [
     id: 2,
     author: { id: 3, username: "user3" },
     content: "Hi admin, how are you?",
-    date: new Date("2019-05-20T11:01"),
+    date: new Date("2019-05-20T11:01").toLocaleString(),
     isNew: true,
     isNotification: false
   },
@@ -26,7 +26,7 @@ var fakemessages = [
     id: 3,
     author: { id: 3, username: "user3" },
     content: "Whats up everyone!",
-    date: new Date("2019-05-20T11:03"),
+    date: new Date("2019-05-20T11:03").toLocaleString(),
     isNew: true,
     isNotification: false
   },
@@ -34,7 +34,7 @@ var fakemessages = [
     id: 4,
     author: { id: 3, username: "user3" },
     content: "Hi, this message should appear in a new date block",
-    date: new Date("2019-05-21T15:00"),
+    date: new Date("2019-05-21T15:00").toLocaleString(),
     isNew: true,
     isNotification: false
   },
@@ -42,7 +42,7 @@ var fakemessages = [
     id: 5,
     author: { id: 1, username: "admin" },
     content: "Nice",
-    date: new Date("2019-05-21T18:00"),
+    date: new Date("2019-05-21T18:00").toLocaleString(),
     isNew: true,
     isNotification: false
   }
@@ -51,7 +51,7 @@ var fakemessages = [
 function createNewChannel(name, author) {
   return {
     id: Date.now(),
-    creationDate: new Date(),
+    creationDate: new Date().toLocaleString(),
     name: name,
     author: author,
     joined: true,
@@ -65,7 +65,7 @@ function createNewMessage(message, author, typeMessage) {
     id: Date.now(),
     author: { id: author.id, username: author.username },
     content: message,
-    date: new Date(),
+    date: new Date().toLocaleString(),
     isNew: true,
     isNotification: typeMessage
   };
@@ -176,11 +176,16 @@ function listAllMessages() {
     arrayOfMessages.forEach((message, index, messages) => {
       if (index == 0) {
         messaggesList += newDateSeparator(message.date);
-        messaggesList += newNotificationElement(message);
+        if (message.isNotification) {
+          messaggesList += newNotificationElement(message);
+        } else {
+          messaggesList += newMessageBlockHeader(message);
+          messaggesList += newMessageBlockElement(message);
+        }
       } else if (messages[index - 1].isNotification) {
         if (
-          index == 0 ||
-          messages[index - 1].date.getDate() != message.date.getDate()
+          new Date(messages[index - 1].date).getDate() !=
+          new Date(message.date).getDate()
         ) {
           messaggesList += newDateSeparator(message.date);
         }
@@ -192,19 +197,28 @@ function listAllMessages() {
         }
       } else if (message.isNotification) {
         messaggesList += newMessageBlockFooter();
-        if (messages[index - 1].date.getDate() != message.date.getDate()) {
+        if (
+          new Date(messages[index - 1].date).getDate() !=
+          new Date(message.date).getDate()
+        ) {
           messaggesList += newDateSeparator(message.date);
         }
         messaggesList += newNotificationElement(message);
       } else if (messages[index - 1].author.id != message.author.id) {
         messaggesList += newMessageBlockFooter();
-        if (messages[index - 1].date.getDate() != message.date.getDate()) {
+        if (
+          new Date(messages[index - 1].date).getDate() !=
+          new Date(message.date).getDate()
+        ) {
           messaggesList += newDateSeparator(message.date);
         }
         messaggesList += newMessageBlockHeader(message);
         messaggesList += newMessageBlockElement(message);
       } else {
-        if (messages[index - 1].date.getDate() != message.date.getDate()) {
+        if (
+          new Date(messages[index - 1].date).getDate() !=
+          new Date(message.date).getDate()
+        ) {
           messaggesList += newMessageBlockFooter();
           messaggesList += newDateSeparator(message.date);
           messaggesList += newMessageBlockHeader(message);
@@ -226,12 +240,19 @@ function appendNewMessage(message) {
   let $messages_container = document.getElementById("messages_container");
   let arrayOfMessages = app.channels[indexChannelActive].messages;
   let lastMessage = arrayOfMessages[arrayOfMessages.length - 1];
+  let newdate = new Date(message.date);
+  let oldDate = new Date(lastMessage.date);
+  let haveDifferentDate = oldDate.getDate() != newdate.getDate();
+  if (haveDifferentDate) {
+    $messages_container.innerHTML += newDateSeparator(message.date);
+  }
 
   if (message.isNotification) {
     $messages_container.innerHTML += newNotificationElement(message);
   } else if (
     lastMessage.isNotification ||
-    message.author.id != lastMessage.author.id
+    message.author.id != lastMessage.author.id ||
+    haveDifferentDate
   ) {
     $messages_container.innerHTML +=
       newMessageBlockHeader(message) +
@@ -306,8 +327,9 @@ function initializeConnection() {
 
         messageForAll = user.username + " has joint to this group";
         app.channels[indexChannelActive].joined = true;
-        let msg = createNewMessage(messageForYou, user, true);
-        app.channels[indexChannelActive].messages.push(msg);
+        app.channels[indexChannelActive].messages.push(
+          createNewMessage(messageForYou, user, true)
+        );
       } else messageForAll = user.username + " has connected";
 
       let newMessage = createNewMessage(messageForAll, user, true);
