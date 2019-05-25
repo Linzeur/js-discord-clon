@@ -22,10 +22,16 @@ body img {
 
 .logo {
   position: absolute;
-  left: 0;
-  top: 20px;
+  left: 30px;
+  top: 50px;
   font-size: 20px;
 }
+
+.logo svg {
+  fill: #fff;
+  width: 200px;
+}
+
 .login {
   position: absolute;
   width: 480px;
