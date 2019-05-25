@@ -9,10 +9,7 @@ body {
     "app-name channel-header"
     "channels chat-room";
 }
-/* Only test */
-/* * {
-  border: 1px solid red;
-} */
+
 .app-name {
   grid-area: app-name;
 }
@@ -30,7 +27,6 @@ body {
 }
 
 .app-name {
-  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -42,6 +38,11 @@ body {
   background-color: #2f3136;
 }
 
+.app-name:hover {
+  cursor: pointer;
+  background-color: #222327;
+}
+
 .app-name svg {
   width: 28px;
   height: 28px;
@@ -49,158 +50,203 @@ body {
 }
 
 .channels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: #2f3136;
-  position: relative;
 }
 
-.text_channels {
+.container-channels {
+  color: #8e9297;
+  padding: 0 20px 20px 20px;
+}
+
+.channel-header-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.header-name {
+  display: flex;
+  align-items: center;
+}
+
+.header-name span {
+  margin-left: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.header-name:hover {
+  cursor: pointer;
+  color: #dcddde;
+}
+
+.header-name svg:first-child {
+  fill: #8e9297;
+  width: 12px;
+  height: 12px;
+}
+
+.channel-header-list svg:last-child {
+  fill: #8e9297;
+  width: 18px;
+  height: 18px;
+}
+
+.channel-header-list svg:last-child:hover {
+  cursor: pointer;
+  fill: #dcddde;
+}
+
+#channels-list {
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+}
+
+#channels-list li {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  color: #BDC0C1;
+  padding: 7px 10px 5px 10px;
+  margin: 3px 0;
+  border-radius: 5px;
 }
 
-.text_channels:hover {
+#channels-list .active {
+  background-color: #40444b;
+}
+
+.active > .channel-item-option svg {
+  visibility: visible;
+}
+
+.active > .channel-item span {
   color: #fff;
-  cursor: pointer;
 }
 
-.text_channels svg {
-  width: 22px;
-  height: 22px;
+#channels-list .active:hover {
+  cursor: auto;
+  background-color: #40444b;
+}
+
+#channels-list li:hover {
+  cursor: pointer;
+  background-color: #292b2f;
+}
+
+#channels-list li:hover .channel-item-option svg {
+  visibility: visible;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+}
+
+.channel-item span {
+  margin-left: 5px;
+}
+
+.channel-item svg {
+  width: 20px;
+  height: 20px;
   fill: #8e9297;
 }
 
-.each_channel:hover {
-  color: #fff;
-  cursor: pointer;
+.channel-item-option svg {
+  visibility: hidden;
+  width: 16px;
+  height: 16px;
+  fill: #8e9297;
 }
-#channels_list {
-  list-style: none;
-  color: #8e9297;
+
+.channel-item-option svg:hover {
+  cursor: pointer;
+  fill: #dcddde;
 }
 
 #addChannelForm {
-  margin: 0px auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  height: 30px;
-}
-
-.add_channel {
-  width: 70%;
-  border-radius: 5px;
-  border: none;
-  height: 65%;
-}
-
-.add_button {
-  border-radius: 5px;
-  border: none;
-  height: 70%;
-}
-
-.channel_section_bottom {
-  background: rgba(32, 34, 37, 0.3);
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 50px;
-  color: #fff;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.channel_bottom {
-  width: 12%;
-  height: 100%;
-}
-
-.channel_bottom2,
-.channel_bottom3 {
-  width: 44%;
-  height: 100%;
-  padding-left: 3%;
-  /* padding-top: 7px; */
-}
-
-.channel_user_logo {
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  display: flex;
   padding: 5px;
-  flex-direction: column;
+  font-size: 15px;
+  border-radius: 5px;
+  background-color: #202225;
+}
+
+#add-channel {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  color: #b9bbbe;
+  background-color: #202225;
+}
+
+#add-channel:focus {
+  outline: none;
+}
+
+#channelError {
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
+  color: rgb(170, 18, 18);
 }
 
-.channel_user_logo:hover {
-  cursor: pointer;
-  opacity: 0.8;
+#channelError svg {
+  fill: rgb(170, 18, 18);
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  transform: rotate(45deg);
 }
 
-.channel_status {
-  position: absolute;
-  background-color: #43b581;
-  border: 2px solid #2f3136;
-  width: 10px;
-  height: 10px;
-  bottom: 3px;
-  border-radius: 7px;
-  left: 10%;
-}
-
-.channel_username {
-  display: block;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 84px;
-  padding: 7px 0px 0px 20px;
-}
-
-.channel_user_id {
-  padding-left: 20px;
-  margin-top: 4px;
-  opacity: 0.7;
-  font-size: 10px;
-  color: #c8cacb;
-}
-
-.buttons {
+.container-block-user {
   display: flex;
   flex-direction: row;
   align-items: center;
-  opacity: 1;
-  font-size: 10px;
-  padding-left: 20px;
-  margin-top: 12px;
+  justify-content: space-between;
+  padding: 0 5px;
+  background: rgba(32, 34, 37, 0.3);
 }
 
-.buttons svg {
+.container-block-user svg {
   width: 24px;
   height: 24px;
-  fill: #fff;
-}
-.button_micro,
-.button_settings,
-.button_audio {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: no-repeat 50% 50%;
-  background-size: 18px 18px;
-  position: relative;
-  opacity: 0.6;
-  border: none;
+  fill: #b9bbbe;
+  padding: 5px;
 }
 
-.button_micro:hover,
-.button_settings:hover,
-.button_audio:hover {
-  opacity: 1;
+.container-block-user svg:hover {
+  cursor: pointer;
+  fill: #dcddde;
+  border-radius: 5px;
+  background-color: rgba(24, 25, 28, 0.3);
+}
+
+.block-data-user {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 10px;
+}
+
+.data-user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.data-user .user {
+  font-size: 14px;
 }
 
 /* =============================== */
@@ -376,6 +422,13 @@ body {
 .user {
   font-size: 16px;
   color: #fff;
+}
+
+.id-user {
+  margin-top: 4px;
+  opacity: 0.7;
+  font-size: 10px;
+  color: #c8cacb;
 }
 
 .talk {
@@ -572,11 +625,3 @@ body {
   background-color: #36393f;
   border-radius: 5px;
 }
-
-/* #hi input:checked .container-member {
-  width: 300px;
-} */
-
-/* #hi input:checked ~ svg {
-  fill: red !important;
-} */
