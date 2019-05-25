@@ -10,7 +10,7 @@ var fakemessages = [
     id: 1,
     author: { id: 1, username: "admin" },
     content: "Hi everyone",
-    date: new Date("2019-05-20T11:00"),
+    date: new "2019-05-20T11:00"(),
     isNew: true,
     isNotification: false
   },
@@ -105,7 +105,9 @@ function newNotificationElement(message) {
       message.author.username,
       `<span class='user'>${message.author.username}</span>`
     )}</span>
-    <span class="date">${new Date(message.date).toLocaleTimeString()}</span>
+    <span class="date">
+    ${new Date(message.date).toLocaleTimeString()}
+    </span>
   </li>
   `;
 }
@@ -123,9 +125,9 @@ function newMessageBlockHeader(message) {
       <ul>
         <li class="container-user">
           <span class="user">${message.author.username}</span>
-          <span class="date">${new Date(
-            message.date
-          ).toLocaleTimeString()}</span>
+          <span class="date">
+          ${new Date(message.date).toLocaleTimeString()}
+          </span>
         </li>
   `;
 }
@@ -187,7 +189,7 @@ function appendNewMessage(message) {
     $messages_container.innerHTML += newNotificationElement(message);
   } else if (
     lastMessage.isNotification ||
-    !(message.author.id == lastMessage.author.id)
+    message.author.id != lastMessage.author.id
   ) {
     $messages_container.innerHTML +=
       newMessageBlockHeader(message) +
@@ -272,7 +274,7 @@ function reconnectServer() {
 }
 
 function connectionSocket() {
-  socket = new WebSocket("ws://192.168.86.81:3000");
+  socket = new WebSocket("ws://192.168.86.55:3000");
 
   socket.addEventListener("open", initializeConnection);
 
