@@ -320,8 +320,6 @@ function filterOwnMessages(message) {
 
 function modifyStateUsers(idUser, newState) {
   let indexUserFound = app.users.findIndex(user => user.id == idUser);
-  console.log(indexUserFound);
-  console.log(app.users[indexUserFound]);
   app.users[indexUserFound].isActive = newState;
 }
 
