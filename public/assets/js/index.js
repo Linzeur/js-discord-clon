@@ -342,7 +342,7 @@ function appendNewMessage(message) {
   } else if (
     lastMessage.isNotification ||
     message.author.id != lastMessage.author.id ||
-    haveDifferentDate ||
+    haveDifferentDate
   ) {
     $messages_container.innerHTML +=
       newMessageBlockHeader(message) +
@@ -354,7 +354,7 @@ function appendNewMessage(message) {
     );
   }
   $messages_container.parentNode.scrollTop =
-  $messages_container.parentNode.scrollHeight;
+    $messages_container.parentNode.scrollHeight;
   message.isNew = false;
 }
 
