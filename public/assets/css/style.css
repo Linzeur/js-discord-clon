@@ -151,10 +151,12 @@ body {
 .channel-item {
   display: flex;
   align-items: center;
+  width: calc(100% - 40px);
 }
 
 .channel-item span {
   margin-left: 5px;
+  width: 95%;
 }
 
 .channel-item svg {
@@ -369,10 +371,6 @@ body {
   height: 18px;
 }
 
-.messages-old {
-  opacity: 0.7;
-}
-
 .icon-messages-old {
   filter: grayscale(1);
 }
@@ -484,6 +482,11 @@ body {
 
 .scrollbar.groups {
   height: calc(100vh - 50px - 48px - 20px);
+}
+
+.scrollbar.state-users {
+  display: block;
+  height: calc(100vh - 48px - 2px);
 }
 
 .scrollbar::-webkit-scrollbar {

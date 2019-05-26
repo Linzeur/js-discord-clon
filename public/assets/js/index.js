@@ -3,50 +3,9 @@ const maxAttempt = 20;
 
 var attemptConnectionSocket = 0;
 var indexChannelActive = 0;
-var firstConnection = true;
+var firstConnection = true,
+  isPageVisible = true;
 var app, socket, stateNotification;
-var fakemessages = [
-  {
-    id: 1,
-    author: { id: 1, username: "admin" },
-    content: "Hi everyone",
-    date: new Date("2019-05-20T11:00").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 2,
-    author: { id: 3, username: "user3" },
-    content: "Hi admin, how are you?",
-    date: new Date("2019-05-20T11:01").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 3,
-    author: { id: 3, username: "user3" },
-    content: "Whats up everyone!",
-    date: new Date("2019-05-20T11:03").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 4,
-    author: { id: 3, username: "user3" },
-    content: "Hi, this message should appear in a new date block",
-    date: new Date("2019-05-21T15:00").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 5,
-    author: { id: 1, username: "admin" },
-    content: "Nice",
-    date: new Date("2019-05-24T18:00").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  }
-];
 
 function createNewChannel(name, author) {
   return {
@@ -54,20 +13,25 @@ function createNewChannel(name, author) {
     creationDate: new Date().toLocaleString(),
     name: name,
     author: author,
-    joined: true,
+    joined: false,
     visibility: false,
     messages: []
   };
 }
 
-function createNewMessage(message, author, typeMessage) {
+function createNewMessage(message, author, typeMessage, channelId) {
   return {
-    id: Date.now(),
-    author: { id: author.id, username: author.username },
-    content: message,
-    date: new Date().toLocaleString(),
-    isNew: true,
-    isNotification: typeMessage
+    message: {
+      id: Date.now(),
+      author: { id: author.id, username: author.username },
+      content: message,
+      date: new Date().toLocaleString(),
+      isNew: true,
+      isNotification: typeMessage
+    },
+    channel: {
+      id: channelId
+    }
   };
 }
 
@@ -102,13 +66,13 @@ function listChannels() {
   let elements = "";
   let channelActive = "";
   app.channels.forEach((channel, index) => {
-    if (index == 0) channelActive = "active";
+    if (index == indexChannelActive) channelActive = "active";
     else channelActive = "";
     elements += `
     <li class="${channelActive}" data-index-channel="${index}">
       <div class="channel-item">
         <svg><use xlink:href="#hashtag"></svg>
-        <span>${channel.name}</span>
+        <span class="channel-item-name">${channel.name}</span>
       </div>
       <div class="channel-item-option">
         <svg><use xlink:href="#people-plus"></svg>
@@ -119,45 +83,78 @@ function listChannels() {
   });
   let channelList = document.getElementById("channels-list");
   channelList.innerHTML = elements;
+  let containerScroll = channelList.parentNode.parentNode.parentNode;
+  containerScroll.scrollTop = containerScroll.scrollHeight;
 }
 
-function goToChannelFirstTime(indexListChannel) {
-  app.channels[indexChannelActive].visibility = false;
-  indexChannelActive = indexListChannel;
-  app.channels[indexChannelActive].visibility = true;
-  app.channels[indexChannelActive].joined = true;
-  console.log(indexChannelActive);
-  console.log(app.channels[indexChannelActive].name);
+function listAllMembers() {
+  let statesUsers = document.getElementsByClassName("state");
+  let numUsersOnline = 0,
+    numUsersOffline = 0;
+  let strOnline = "",
+    strOffline = "";
+  let iconUserActual = "";
+  app.users.forEach((user, index) => {
+    if (index == 0) iconUserActual = '<svg><use xlink:href="#crown"></svg>';
+    else iconUserActual = "";
+    if (user.isActive) {
+      numUsersOnline++;
+      strOnline += `<div class="block-user">
+                      <div class="user-img -block in-tab">
+                        <img
+                          src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
+                          alt="user-image"
+                        />
+                      </div>
+                      <span class="user -block">${user.username}</span>
+                      ${iconUserActual}
+                    </div>`;
+    } else {
+      numUsersOffline++;
+      strOffline += `<div class="block-user offline">
+                      <div class="user-img -block">
+                        <img
+                          src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
+                          alt="user-image"
+                        />
+                      </div>
+                      <span class="user -block">${user.username}</span>
+                    </div>`;
+    }
+  });
+  statesUsers[0].innerHTML = `ONLINE ${numUsersOnline}`;
+  statesUsers[1].innerHTML = `OFFLINE ${numUsersOffline}`;
+  document.getElementById("dvOnline").innerHTML = strOnline;
+  document.getElementById("dvOffline").innerHTML = strOffline;
 }
 
 function newNotificationElement(message) {
-  let styleOldMessages = "";
-  if (!message.isNew) styleOldMessages = "messages-old";
+  let styleOldIcon = "";
+  if (!message.isNew) styleOldIcon = "icon-messages-old";
 
   return `
-  <li class="container-notification -b-top ${styleOldMessages}">
-    <svg><use xlink:href="#arrow-right"/></svg>
+  <li class="container-notification -b-top">
+    <svg class="${styleOldIcon}"><use xlink:href="#arrow-right"/></svg>
     <span class="group-notification">${message.content.replace(
       message.author.username,
       `<span class='user'>${message.author.username}</span>`
     )}</span>
     <span class="date">
-    ${new Date(message.date).toLocaleTimeString()}
+    ${new Date(message.date).toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit"
+    })}
     </span>
   </li>
   `;
 }
 
 function newMessageBlockHeader(message) {
-  let styleOldMessages = "",
-    styleOldIcon = "";
-  if (!message.isNew) {
-    styleOldMessages = "messages-old";
-    styleOldIcon = "icon-messages-old";
-  }
+  let styleOldIcon = "";
+  if (!message.isNew) styleOldIcon = "icon-messages-old";
 
   return `
-  <li class="container-messages -b-top ${styleOldMessages}">
+  <li class="container-messages -b-top">
     <div class="user-img">
       <img
         class="${styleOldIcon}"
@@ -170,7 +167,10 @@ function newMessageBlockHeader(message) {
         <li class="container-user">
           <span class="user">${message.author.username}</span>
           <span class="date">
-          ${new Date(message.date).toLocaleTimeString()}
+          ${new Date(message.date).toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit"
+          })}
           </span>
         </li>
   `;
@@ -272,6 +272,8 @@ function listAllMessages() {
 
     let $messagesContainer = document.getElementById("messages_container");
     $messagesContainer.innerHTML = messaggesList;
+    $messagesContainer.parentNode.scrollTop =
+      $messagesContainer.parentNode.scrollHeight;
   }
 }
 
@@ -302,13 +304,16 @@ function appendNewMessage(message) {
       message
     );
   }
+  $messages_container.parentNode.scrollTop =
+    $messages_container.parentNode.scrollHeight;
+  message.isNew = false;
 }
 
-function filterOwnMessages(messageReceived) {
+function filterOwnMessages(message) {
   return !(
-    messageReceived.isNotification &&
-    messageReceived.author.id == app.currentuser.id &&
-    messageReceived.content.indexOf("Welcome") == -1
+    message.isNotification &&
+    message.author.id == app.currentuser.id &&
+    message.content.indexOf("Welcome") == -1
   );
 }
 
@@ -318,23 +323,47 @@ function modifyStateUsers(idUser, newState) {
 }
 
 function receiveMessages(data) {
-  if (filterOwnMessages(data)) {
-    if (data.isNotification) {
+  if (filterOwnMessages(data.message)) {
+    if (data.message.isNotification) {
       //There are two types of messages with property isNotification = true, to send:
       //1.- When an user is joint first time
       //2.- When an user is connected after a while
 
-      if (data.content.indexOf("has joint to this group") > -1) {
-        let newUserJoint = data.author;
+      if (data.message.content.indexOf("has joint to this group") > -1) {
+        let newUserJoint = data.message.author;
         newUserJoint["isActive"] = true;
         app.users = app.users.concat(newUserJoint);
-      } else modifyStateUsers(data.author.id, true);
+      } else modifyStateUsers(data.message.author.id, true);
     }
 
     console.log(data);
-    appendNewMessage(data);
-    app.channels[indexChannelActive].messages.push(data);
+    let channelIndex = app.channels.findIndex(
+      channel => channel.id == data.channel.id
+    );
+    if (indexChannelActive == channelIndex) appendNewMessage(data.message);
+    else {
+      if (stateNotification == "granted") {
+        let title = `New messages in #${app.channels[channelIndex].name}`;
+        let body = `The user ${data.message.author.username} has written`;
+        const notification = sendNotificationAPI(title, body);
+        notification.addEventListener("click", () =>
+          changeChannel.bind(null, channelIndex)
+        );
+      }
+    }
+
+    app.channels[channelIndex].messages.push(data.message);
     localStorage.setItem(keyStorage, JSON.stringify(app));
+    listAllMembers();
+
+    if (!isPageVisible) {
+      if (stateNotification == "granted") {
+        let title = `The user ${data.message.author.username} has written`;
+        let body = data.content;
+        const notification = sendNotificationAPI(title, body);
+        notification.addEventListener("click", () => window.focus());
+      }
+    }
   }
 }
 
@@ -354,28 +383,60 @@ async function createNotificationAPI() {
   }
 }
 
+function sendNotificationAPI(title, body) {
+  let notification = new Notification(title, {
+    body: body,
+    icon: "/assets/img/discord_icon.ico",
+    image: "/assets/img/discord_icon.ico"
+  });
+  return notification;
+}
+
+function changeChannel(channelIndex) {
+  console.log("Preubas");
+  window.focus();
+  let user = app.currentuser;
+  let messageForAll = "";
+
+  if (!app.channels[channelIndex].joined) {
+    let messageForYouContent = "Welcome " + user.username;
+    messageForAllContent = user.username + " has joint to this channel";
+    app.channels[channelIndex].joined = true;
+    app.channels[channelIndex].visibility = true;
+    let messageForYou = createNewMessage(
+      messageForYouContent,
+      user,
+      true,
+      app.channels[channelIndex].id
+    );
+    app.channels[channelIndex].messages.push(messageForYou.message);
+  } else messageForAllContent = user.username + " has connected";
+
+  messageForAll = createNewMessage(
+    messageForAllContent,
+    user,
+    true,
+    app.channels[channelIndex].id
+  );
+
+  app.channels[indexChannelActive].visibility = false;
+  indexChannelActive = channelIndex;
+  app.channels[indexChannelActive].visibility = true;
+
+  socket.send(JSON.stringify(messageForAll));
+  localStorage.setItem(keyStorage, JSON.stringify(app));
+  listAllMessages();
+  let nameChannel = app.channels[indexChannelActive].name;
+  document.getElementById("spnNameChannel").innerHTML = nameChannel;
+  let placeholder = `send message to #${nameChannel}`;
+  document.getElementById("txtMessage").placeholder = placeholder;
+}
+
 function initializeConnection() {
   attemptConnectionSocket = 0;
   if (window.performance.navigation.type == 0) {
     if (firstConnection) {
-      let user = app.currentuser;
-      let messageForAll = "";
-
-      if (!app.channels[0].joined) {
-        let messageForYou = "Welcome " + user.username;
-
-        messageForAll = user.username + " has joint to this group";
-        app.channels[indexChannelActive].joined = true;
-        app.channels[indexChannelActive].messages.push(
-          createNewMessage(messageForYou, user, true)
-        );
-      } else messageForAll = user.username + " has connected";
-
-      let newMessage = createNewMessage(messageForAll, user, true);
-
-      socket.send(JSON.stringify(newMessage));
-      localStorage.setItem(keyStorage, JSON.stringify(app));
-      listAllMessages();
+      changeChannel(0);
       firstConnection = false;
     }
   }
@@ -406,20 +467,20 @@ function connectionSocket() {
       let idUserDisconnected = data.split("|")[1] * 1;
       modifyStateUsers(idUserDisconnected, false);
       localStorage.setItem(keyStorage, JSON.stringify(app));
+      listAllMembers();
     } else if (data.indexOf("newChannel") > -1) {
       let receivedData = JSON.parse(data.split("|")[1]);
       if (receivedData.author.id != app.currentuser.id) {
         app.channels.push(receivedData);
         listChannels();
         if (stateNotification == "granted") {
-          const notification = new Notification("New channel was created", {
-            body: `The name of channel is ${receivedData.name}`,
-            icon: "/assets/img/discord_icon.ico",
-            image: "/assets/img/discord_icon.ico"
-          });
+          let title = "New channel was created";
+          let body = `The name of channel is ${receivedData.name}`;
+          const notification = sendNotificationAPI(title, body);
+
           notification.addEventListener(
             "click",
-            goToChannelFirstTime.bind(null, app.channels.length - 1)
+            changeChannel.bind(null, app.channels.length - 1)
           );
         }
         localStorage.setItem(keyStorage, JSON.stringify(app));
@@ -464,7 +525,8 @@ function handleAddMessageSubmit(event) {
   if ($message.value.trim().length != 0) {
     $message.value = formatName($message.value.trim());
     let user = app.currentuser;
-    let newMessage = createNewMessage($message.value, user, false);
+    let channelId = app.channels[indexChannelActive].id;
+    let newMessage = createNewMessage($message.value, user, false, channelId);
     socket.send(JSON.stringify(newMessage));
     $message.value = "";
   }
@@ -477,13 +539,37 @@ function assignEvents() {
   let $formSendMessage = document.getElementById("sendMessageForm");
   $formSendMessage.addEventListener("submit", handleAddMessageSubmit);
 
+  document.addEventListener("click", function(e) {
+    if (
+      e.target &&
+      e.target.className.toString().includes("channel-item-name")
+    ) {
+      let newChannelIndex = parseInt(
+        e.target.parentElement.parentElement.getAttribute("data-index-channel")
+      );
+      changeChannel(newChannelIndex);
+      listChannels();
+    }
+  });
+
   connectionSocket();
+
+  document.addEventListener("visibilitychange", event => {
+    if (document.hidden) {
+      isPageVisible = false;
+    } else {
+      isPageVisible = true;
+    }
+  });
 }
 
 window.onload = function() {
   let storedData = localStorage.getItem(keyStorage);
   if (storedData) {
     app = JSON.parse(storedData);
+    indexChannelActive = app.channels.findIndex(
+      channel => channel.visibility == true
+    );
     let sectionInfoUser = document.getElementsByClassName("data-user")[0];
     let listChilds = sectionInfoUser.children;
     listChilds[0].innerText = app.currentuser.username;
@@ -491,6 +577,7 @@ window.onload = function() {
     assignEvents();
     listChannels();
     listAllMessages();
+    listAllMembers();
   } else {
     window.location.href = "login.html";
   }
