@@ -128,16 +128,6 @@ function listChannels() {
   containerScroll.scrollTop = containerScroll.scrollHeight;
 }
 
-// function goToChannelFirstTime(indexListChannel) {
-//   app.channels[indexChannelActive].visibility = false;
-//   indexChannelActive = indexListChannel;
-//   app.channels[indexChannelActive].visibility = true;
-//   app.channels[indexChannelActive].joined = true;
-//   console.log(indexChannelActive);
-//   console.log(app.channels[indexChannelActive].name);
-//   window.focus();
-// }
-
 function listAllMembers() {
   let statesUsers = document.getElementsByClassName("state");
   let numUsersOnline = 0,
@@ -453,24 +443,6 @@ function initializeConnection() {
   if (window.performance.navigation.type == 0) {
     if (firstConnection) {
       changeChannel(0);
-      // let user = app.currentuser;
-      // let messageForAll = "";
-
-      // if (!app.channels[0].joined) {
-      //   let messageForYou = "Welcome " + user.username;
-
-      //   messageForAll = user.username + " has joint to this group";
-      //   app.channels[indexChannelActive].joined = true;
-      //   app.channels[indexChannelActive].messages.push(
-      //     createNewMessage(messageForYou, user, true)
-      //   );
-      // } else messageForAll = user.username + " has connected";
-
-      // let newMessage = createNewMessage(messageForAll, user, true);
-
-      // socket.send(JSON.stringify(newMessage));
-      // localStorage.setItem(keyStorage, JSON.stringify(app));
-      // listAllMessages();
       firstConnection = false;
     }
   }
