@@ -44,7 +44,7 @@ body {
   background-color: #222327;
 }
 
-.app-name svg {
+.app-name svg:last-child {
   width: 28px;
   height: 28px;
   fill: #8e9297;
@@ -656,5 +656,9 @@ body {
 #btnSearch,
 #btnSend,
 #btnPlus {
+  display: none;
+}
+
+.app-name svg:first-child {
   display: none;
 }
