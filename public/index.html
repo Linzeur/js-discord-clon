@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="Description" content="This the index of chatroom">
     <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/mobile-index.css" />
     <link
       rel="icon"
       href="https://discordapp.com/assets/07dca80a102d4149e9736d4b162cff6f.ico"
@@ -80,6 +81,17 @@
         <symbol id="crown" viewBox="0 0 24 24" aria-label="server owner">
           <path d="M2,11 L0,0 L5.5,7 L9,0 L12.5,7 L18,0 L16,11 L2,11 L2,11 Z M16,14 C16,14.5522847 15.5522847,15 15,15 L3,15 C2.44771525,15 2,14.5522847 2,14 L2,13 L16,13 L16,14 Z" transform="translate(3 4)"></path>
         </symbol>
+        <symbol id="dots" viewBox="0 0 512 512">
+          <circle cx="256" cy="256" r="64"/>
+          <circle cx="256" cy="448" r="64"/>
+          <circle cx="256" cy="64" r="64"/>
+        </symbol>
+        <symbol id="menu" viewBox="0 0 73.168 73.168">
+          <path d="M4.242,14.425h64.684c2.344,0,4.242-1.933,4.242-4.324c0-2.385-1.898-4.325-4.242-4.325H4.242     C1.898,5.776,0,7.716,0,10.101C0,12.493,1.898,14.425,4.242,14.425z M68.926,32.259H4.242C1.898,32.259,0,34.2,0,36.584     c0,2.393,1.898,4.325,4.242,4.325h64.684c2.344,0,4.242-1.933,4.242-4.325C73.168,34.2,71.27,32.259,68.926,32.259z      M68.926,58.742H4.242C1.898,58.742,0,60.683,0,63.067c0,2.393,1.898,4.325,4.242,4.325h64.684c2.344,0,4.242-1.935,4.242-4.325     C73.168,60.683,71.27,58.742,68.926,58.742z"/>
+        </symbol>
+        <symbol id="send" viewBox="0 0 535.5 535.5">
+          <polygon points="0,497.25 535.5,267.75 0,38.25 0,216.75 382.5,267.75 0,318.75   "/>
+        </symbol>
       </svg>
     </div>
     <section class="app-name">
@@ -88,14 +100,17 @@
     </section>
     <section class="channel-header">
       <div class="channel-name">
+        <svg id="btnMenu"><use xlink:href="#menu"></svg>
         <svg><use xlink:href="#hashtag"></svg>
         <span class="name">general</span>
       </div>
       <div class="channel-option">
-        <svg><use xlink:href="#bel"></svg>
-        <svg><use xlink:href="#pin"></svg>
+        <svg id="btnBel"><use xlink:href="#bel"></svg>
+        <svg id="btnPin"><use xlink:href="#pin"></svg>
+        <svg id="btnSearch"><use xlink:href="#search"></svg>
         <svg id="btnPeople" onclick="showMemberList()" class=""><use xlink:href="#people"></svg>
-        <div class="search">
+        <svg id="btnDots"><use xlink:href="#dots"></svg>
+        <div id="actionSearch" class="search">
           <form action="">
             <label for="input-search" aria-label="add search"></label>
             <input class="input-search" type="text" placeholder="Search" title="You can change this later."/>          
@@ -104,8 +119,8 @@
           </form>
           <svg><use xlink:href="#search"></svg>
         </div>
-        <svg><use xlink:href="#at"></svg>
-        <svg><use xlink:href="#help"></svg>
+        <svg id="btnAt"><use xlink:href="#at"></svg>
+        <svg id="btnHelp"><use xlink:href="#help"></svg>
       </div>
     </section>
     <section class="channels">
@@ -200,23 +215,25 @@
         </div>
         <div class="chat-footer -b-top">
           <div class="container-footer">
-            <svg class="-effect"><use xlink:href="#plus-circle"></svg>
+            <svg id="btnPlus" class="-effect"><use xlink:href="#plus"></svg>
+            <svg id="btnPlusCircle" class="-effect"><use xlink:href="#plus-circle"></svg>
             <div class="write-message">
               <form action="" id="sendMessageForm" >
                   <label for="txtMessage" aria-label="Recieve message"></label>
                 <input
                   type="text"
                   id="txtMessage"
-                  placeholder="send message to #general"
+                  placeholder="Send message to #general"
                   autocomplete="off"
                 />
                 <br />
                 <input hidden type="submit" value="Send"></input>
               </form>
             </div>
-            <svg class="-effect"><use xlink:href="#gift"></svg>
-            <svg class="-effect"><use xlink:href="#gif"></svg>
-            <svg class="-effect"><use xlink:href="#smile"></svg>
+            <svg id="btnGift" class="-effect"><use xlink:href="#gift"></svg>
+            <svg id="btnGif" class="-effect"><use xlink:href="#gif"></svg>
+            <svg id="btnSmile" class="-effect"><use xlink:href="#smile"></svg>
+            <svg id="btnSend" class="-effect"><use xlink:href="#send"></svg>
           </div>
         </div>
       </div>
@@ -265,7 +282,7 @@
       </div>
     </section>
     <script src="./assets/js/db-fake.js"></script>
-    <script src="./assets/js/index.js"></script> 
+    <!-- <script src="./assets/js/index.js"></script>  -->
     <script src="./assets/js/action.js"></script>
   </body>
 </html>

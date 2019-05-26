@@ -1,0 +1,90 @@
+@media screen and (max-width: 768px) {
+  body {
+    grid-template: 48px 1fr / 1fr;
+    grid-template-areas:
+      "channel-header"
+      "chat-room";
+  }
+
+  .app-name,
+  .channels,
+  #btnBel,
+  #btnPin,
+  #actionSearch,
+  #btnAt,
+  #btnHelp,
+  #btnGift,
+  #btnGif,
+  #btnPlusCircle {
+    display: none;
+  }
+
+  #btnMenu,
+  #btnDots,
+  #btnSearch,
+  #btnPeople,
+  #btnSmile,
+  #btnPlus {
+    fill: #fff;
+    display: block;
+  }
+
+  #btnSend {
+    display: block;
+  }
+
+  .channel-header {
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .channel-name svg:first-child {
+    fill: #fff;
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+  }
+
+  .channel-name svg {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+  }
+
+  .channel-name span {
+    font-weight: bold;
+  }
+
+  #btnSearch {
+    width: 26px;
+    height: 26px;
+    margin-top: 5px;
+  }
+
+  #btnDots {
+    width: 19px;
+    height: 19px;
+  }
+
+  .messages ul {
+    padding-left: 13px;
+  }
+
+  .chat-footer {
+    padding: 0;
+  }
+
+  .container-footer {
+    margin: 0;
+    border-radius: 0;
+    background-color: #36393f;
+  }
+
+  .write-message input[type="text"] {
+    border-left: 0;
+    background-color: #36393f;
+  }
+
+  .chat-footer.-b-top {
+    border-top: 1px solid #312828;
+  }
+}
