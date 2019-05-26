@@ -320,6 +320,8 @@ function filterOwnMessages(message) {
 
 function modifyStateUsers(idUser, newState) {
   let indexUserFound = app.users.findIndex(user => user.id == idUser);
+  console.log(indexUserFound);
+  console.log(app.users[indexUserFound]);
   app.users[indexUserFound].isActive = newState;
 }
 
@@ -329,11 +331,11 @@ function receiveMessages(data) {
       //There are two types of messages with property isNotification = true, to send:
       //1.- When an user is join first time
       //2.- When an user is connected after a while
-
-      if (data.message.content.indexOf("has joined to this channel") > -1) {
-        let newUserJoined = data.message.author;
-        newUserJoined["isActive"] = true;
-        app.users = app.users.concat(newUserJoined);
+      console.log(data.message);
+      if (data.message.content.indexOf("has joint") > -1) {
+        let newUserJoint = data.message.author;
+        newUserJoint["isActive"] = true;
+        app.users = app.users.concat(newUserJoint);
       } else modifyStateUsers(data.message.author.id, true);
     }
 
