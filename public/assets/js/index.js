@@ -358,11 +358,11 @@ function appendNewMessage(message) {
   message.isNew = false;
 }
 
-function filterOwnMessages(data) {
+function filterOwnMessages(message) {
   return !(
-    data.message.isNotification &&
-    data.message.author.id == app.currentuser.id &&
-    data.message.content.indexOf("Welcome") == -1
+    message.isNotification &&
+    message.author.id == app.currentuser.id &&
+    message.content.indexOf("Welcome") == -1
   );
 }
 
@@ -372,7 +372,7 @@ function modifyStateUsers(idUser, newState) {
 }
 
 function receiveMessages(data) {
-  if (filterOwnMessages(data)) {
+  if (filterOwnMessages(data.message)) {
     if (data.message.isNotification) {
       //There are two types of messages with property isNotification = true, to send:
       //1.- When an user is joint first time
@@ -448,16 +448,6 @@ function changeChannel(channelIndex) {
   listAllMessages();
 }
 
-document.addEventListener("click", function(e) {
-  if (e.target && e.target.className.includes("channel-item-name")) {
-    let newChannelIndex = parseInt(
-      e.target.parentElement.parentElement.getAttribute("data-index-channel")
-    );
-    changeChannel(newChannelIndex);
-    listChannels();
-  }
-});
-
 function initializeConnection() {
   attemptConnectionSocket = 0;
   if (window.performance.navigation.type == 0) {
@@ -526,7 +516,7 @@ function connectionSocket() {
           notification.addEventListener(
             "click",
             // goToChannelFirstTime.bind(null, app.channels.length - 1)
-            changeChannel(app.channels.length - 1)
+            changeChannel.bind(null, app.channels.length - 1)
           );
         }
         localStorage.setItem(keyStorage, JSON.stringify(app));
@@ -584,6 +574,16 @@ function assignEvents() {
 
   let $formSendMessage = document.getElementById("sendMessageForm");
   $formSendMessage.addEventListener("submit", handleAddMessageSubmit);
+
+  document.addEventListener("click", function(e) {
+    if (e.target && e.target.className.includes("channel-item-name")) {
+      let newChannelIndex = parseInt(
+        e.target.parentElement.parentElement.getAttribute("data-index-channel")
+      );
+      changeChannel(newChannelIndex);
+      listChannels();
+    }
+  });
 
   connectionSocket();
 }
