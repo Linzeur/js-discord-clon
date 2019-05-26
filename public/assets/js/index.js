@@ -54,20 +54,25 @@ function createNewChannel(name, author) {
     creationDate: new Date().toLocaleString(),
     name: name,
     author: author,
-    joined: true,
+    joined: false,
     visibility: false,
     messages: []
   };
 }
 
-function createNewMessage(message, author, typeMessage) {
+function createNewMessage(message, author, typeMessage, channelId) {
   return {
-    id: Date.now(),
-    author: { id: author.id, username: author.username },
-    content: message,
-    date: new Date().toLocaleString(),
-    isNew: true,
-    isNotification: typeMessage
+    message: {
+      id: Date.now(),
+      author: { id: author.id, username: author.username },
+      content: message,
+      date: new Date().toLocaleString(),
+      isNew: true,
+      isNotification: typeMessage
+    },
+    channel: {
+      id: channelId
+    }
   };
 }
 
@@ -102,13 +107,13 @@ function listChannels() {
   let elements = "";
   let channelActive = "";
   app.channels.forEach((channel, index) => {
-    if (index == 0) channelActive = "active";
+    if (index == indexChannelActive) channelActive = "active";
     else channelActive = "";
     elements += `
     <li class="${channelActive}" data-index-channel="${index}">
       <div class="channel-item">
         <svg><use xlink:href="#hashtag"></svg>
-        <span>${channel.name}</span>
+        <span class="channel-item-name">${channel.name}</span>
       </div>
       <div class="channel-item-option">
         <svg><use xlink:href="#people-plus"></svg>
@@ -123,15 +128,15 @@ function listChannels() {
   containerScroll.scrollTop = containerScroll.scrollHeight;
 }
 
-function goToChannelFirstTime(indexListChannel) {
-  app.channels[indexChannelActive].visibility = false;
-  indexChannelActive = indexListChannel;
-  app.channels[indexChannelActive].visibility = true;
-  app.channels[indexChannelActive].joined = true;
-  console.log(indexChannelActive);
-  console.log(app.channels[indexChannelActive].name);
-  window.focus();
-}
+// function goToChannelFirstTime(indexListChannel) {
+//   app.channels[indexChannelActive].visibility = false;
+//   indexChannelActive = indexListChannel;
+//   app.channels[indexChannelActive].visibility = true;
+//   app.channels[indexChannelActive].joined = true;
+//   console.log(indexChannelActive);
+//   console.log(app.channels[indexChannelActive].name);
+//   window.focus();
+// }
 
 function listAllMembers() {
   let statesUsers = document.getElementsByClassName("state");
@@ -337,7 +342,7 @@ function appendNewMessage(message) {
   } else if (
     lastMessage.isNotification ||
     message.author.id != lastMessage.author.id ||
-    haveDifferentDate
+    haveDifferentDate ||
   ) {
     $messages_container.innerHTML +=
       newMessageBlockHeader(message) +
@@ -349,14 +354,15 @@ function appendNewMessage(message) {
     );
   }
   $messages_container.parentNode.scrollTop =
-    $messages_container.parentNode.scrollHeight;
+  $messages_container.parentNode.scrollHeight;
+  message.isNew = false;
 }
 
-function filterOwnMessages(messageReceived) {
+function filterOwnMessages(data) {
   return !(
-    messageReceived.isNotification &&
-    messageReceived.author.id == app.currentuser.id &&
-    messageReceived.content.indexOf("Welcome") == -1
+    data.message.isNotification &&
+    data.message.author.id == app.currentuser.id &&
+    data.message.content.indexOf("Welcome") == -1
   );
 }
 
@@ -367,21 +373,26 @@ function modifyStateUsers(idUser, newState) {
 
 function receiveMessages(data) {
   if (filterOwnMessages(data)) {
-    if (data.isNotification) {
+    if (data.message.isNotification) {
       //There are two types of messages with property isNotification = true, to send:
       //1.- When an user is joint first time
       //2.- When an user is connected after a while
 
-      if (data.content.indexOf("has joint to this group") > -1) {
-        let newUserJoint = data.author;
+      if (data.message.content.indexOf("has joint to this group") > -1) {
+        let newUserJoint = data.message.author;
         newUserJoint["isActive"] = true;
         app.users = app.users.concat(newUserJoint);
-      } else modifyStateUsers(data.author.id, true);
+      } else modifyStateUsers(data.message.author.id, true);
     }
 
     console.log(data);
-    appendNewMessage(data);
-    app.channels[indexChannelActive].messages.push(data);
+    let channelIndex = app.channels.findIndex(
+      channel => channel.id == data.channel.id
+    );
+    if (indexChannelActive == channelIndex) {
+      appendNewMessage(data.message);
+    }
+    app.channels[channelIndex].messages.push(data.message);
     localStorage.setItem(keyStorage, JSON.stringify(app));
     listAllMembers();
   }
@@ -403,28 +414,73 @@ async function createNotificationAPI() {
   }
 }
 
+function changeChannel(channelIndex) {
+  let user = app.currentuser;
+  let messageForAll = "";
+
+  if (!app.channels[channelIndex].joined) {
+    let messageForYouContent = "Welcome " + user.username;
+    messageForAllContent = user.username + " has joint to this channel";
+    app.channels[channelIndex].joined = true;
+    app.channels[channelIndex].visibility = true;
+    let messageForYou = createNewMessage(
+      messageForYouContent,
+      user,
+      true,
+      app.channels[channelIndex].id
+    );
+    app.channels[channelIndex].messages.push(messageForYou.message);
+  } else messageForAllContent = user.username + " has connected";
+
+  messageForAll = createNewMessage(
+    messageForAllContent,
+    user,
+    true,
+    app.channels[channelIndex].id
+  );
+
+  app.channels[indexChannelActive].visibility = false;
+  indexChannelActive = channelIndex;
+  app.channels[indexChannelActive].visibility = true;
+
+  socket.send(JSON.stringify(messageForAll));
+  localStorage.setItem(keyStorage, JSON.stringify(app));
+  listAllMessages();
+}
+
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.className.includes("channel-item-name")) {
+    let newChannelIndex = parseInt(
+      e.target.parentElement.parentElement.getAttribute("data-index-channel")
+    );
+    changeChannel(newChannelIndex);
+    listChannels();
+  }
+});
+
 function initializeConnection() {
   attemptConnectionSocket = 0;
   if (window.performance.navigation.type == 0) {
     if (firstConnection) {
-      let user = app.currentuser;
-      let messageForAll = "";
+      changeChannel(0);
+      // let user = app.currentuser;
+      // let messageForAll = "";
 
-      if (!app.channels[0].joined) {
-        let messageForYou = "Welcome " + user.username;
+      // if (!app.channels[0].joined) {
+      //   let messageForYou = "Welcome " + user.username;
 
-        messageForAll = user.username + " has joint to this group";
-        app.channels[indexChannelActive].joined = true;
-        app.channels[indexChannelActive].messages.push(
-          createNewMessage(messageForYou, user, true)
-        );
-      } else messageForAll = user.username + " has connected";
+      //   messageForAll = user.username + " has joint to this group";
+      //   app.channels[indexChannelActive].joined = true;
+      //   app.channels[indexChannelActive].messages.push(
+      //     createNewMessage(messageForYou, user, true)
+      //   );
+      // } else messageForAll = user.username + " has connected";
 
-      let newMessage = createNewMessage(messageForAll, user, true);
+      // let newMessage = createNewMessage(messageForAll, user, true);
 
-      socket.send(JSON.stringify(newMessage));
-      localStorage.setItem(keyStorage, JSON.stringify(app));
-      listAllMessages();
+      // socket.send(JSON.stringify(newMessage));
+      // localStorage.setItem(keyStorage, JSON.stringify(app));
+      // listAllMessages();
       firstConnection = false;
     }
   }
@@ -469,7 +525,8 @@ function connectionSocket() {
           });
           notification.addEventListener(
             "click",
-            goToChannelFirstTime.bind(null, app.channels.length - 1)
+            // goToChannelFirstTime.bind(null, app.channels.length - 1)
+            changeChannel(app.channels.length - 1)
           );
         }
         localStorage.setItem(keyStorage, JSON.stringify(app));
@@ -514,7 +571,8 @@ function handleAddMessageSubmit(event) {
   if ($message.value.trim().length != 0) {
     $message.value = formatName($message.value.trim());
     let user = app.currentuser;
-    let newMessage = createNewMessage($message.value, user, false);
+    let channelId = app.channels[indexChannelActive].id;
+    let newMessage = createNewMessage($message.value, user, false, channelId);
     socket.send(JSON.stringify(newMessage));
     $message.value = "";
   }
@@ -534,6 +592,9 @@ window.onload = function() {
   let storedData = localStorage.getItem(keyStorage);
   if (storedData) {
     app = JSON.parse(storedData);
+    indexChannelActive = app.channels.findIndex(
+      channel => channel.visibility == true
+    );
     let sectionInfoUser = document.getElementsByClassName("data-user")[0];
     let listChilds = sectionInfoUser.children;
     listChilds[0].innerText = app.currentuser.username;
