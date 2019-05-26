@@ -207,6 +207,10 @@ function newDateSeparator(date) {
   `;
 }
 
+function areDifferenteDate(newDate, previousDate) {
+  return new Date(newDate).getDate() != new Date(previousDate).getDate();
+}
+
 function listAllMessages() {
   let messaggesList = "";
   let arrayOfMessages = app.channels[indexChannelActive].messages;
@@ -221,48 +225,40 @@ function listAllMessages() {
           messaggesList += newMessageBlockHeader(message);
           messaggesList += newMessageBlockElement(message);
         }
-      } else if (messages[index - 1].isNotification) {
-        if (
-          new Date(messages[index - 1].date).getDate() !=
-          new Date(message.date).getDate()
-        ) {
-          messaggesList += newDateSeparator(message.date);
-        }
-        if (message.isNotification) {
+      } else {
+        let newDate = message.date;
+        let previousDate = messages[index - 1].date;
+        if (messages[index - 1].isNotification) {
+          if (areDifferenteDate(newDate, previousDate)) {
+            messaggesList += newDateSeparator(message.date);
+          }
+          if (message.isNotification) {
+            messaggesList += newNotificationElement(message);
+          } else {
+            messaggesList += newMessageBlockHeader(message);
+            messaggesList += newMessageBlockElement(message);
+          }
+        } else if (message.isNotification) {
+          messaggesList += newMessageBlockFooter();
+          if (areDifferenteDate(newDate, previousDate)) {
+            messaggesList += newDateSeparator(message.date);
+          }
           messaggesList += newNotificationElement(message);
-        } else {
+        } else if (messages[index - 1].author.id != message.author.id) {
+          messaggesList += newMessageBlockFooter();
+          if (areDifferenteDate(newDate, previousDate)) {
+            messaggesList += newDateSeparator(message.date);
+          }
           messaggesList += newMessageBlockHeader(message);
           messaggesList += newMessageBlockElement(message);
+        } else {
+          if (areDifferenteDate(newDate, previousDate)) {
+            messaggesList += newMessageBlockFooter();
+            messaggesList += newDateSeparator(message.date);
+            messaggesList += newMessageBlockHeader(message);
+          }
+          messaggesList += newMessageBlockElement(message);
         }
-      } else if (message.isNotification) {
-        messaggesList += newMessageBlockFooter();
-        if (
-          new Date(messages[index - 1].date).getDate() !=
-          new Date(message.date).getDate()
-        ) {
-          messaggesList += newDateSeparator(message.date);
-        }
-        messaggesList += newNotificationElement(message);
-      } else if (messages[index - 1].author.id != message.author.id) {
-        messaggesList += newMessageBlockFooter();
-        if (
-          new Date(messages[index - 1].date).getDate() !=
-          new Date(message.date).getDate()
-        ) {
-          messaggesList += newDateSeparator(message.date);
-        }
-        messaggesList += newMessageBlockHeader(message);
-        messaggesList += newMessageBlockElement(message);
-      } else {
-        if (
-          new Date(messages[index - 1].date).getDate() !=
-          new Date(message.date).getDate()
-        ) {
-          messaggesList += newMessageBlockFooter();
-          messaggesList += newDateSeparator(message.date);
-          messaggesList += newMessageBlockHeader(message);
-        }
-        messaggesList += newMessageBlockElement(message);
       }
       message.isNew = false;
     });
@@ -281,10 +277,12 @@ function appendNewMessage(message) {
   let $messages_container = document.getElementById("messages_container");
   let arrayOfMessages = app.channels[indexChannelActive].messages;
   let lastMessage = arrayOfMessages[arrayOfMessages.length - 1];
-  let newdate = new Date(message.date);
-  let oldDate = new Date(lastMessage.date);
-  let haveDifferentDate = oldDate.getDate() != newdate.getDate();
-  if (haveDifferentDate) {
+  let newDate = new Date(message.date);
+  let previousDate = new Date(lastMessage.date);
+  let $lastMessagePrinted = document.getElementById("messages_container")
+    .lastElementChild;
+
+  if (areDifferenteDate(newDate, previousDate)) {
     $messages_container.innerHTML += newDateSeparator(message.date);
   }
 
@@ -293,7 +291,10 @@ function appendNewMessage(message) {
   } else if (
     lastMessage.isNotification ||
     message.author.id != lastMessage.author.id ||
-    haveDifferentDate
+    areDifferenteDate(newDate, previousDate) ||
+    $lastMessagePrinted.firstElementChild.firstElementChild.classList.contains(
+      "icon-messages-old"
+    )
   ) {
     $messages_container.innerHTML +=
       newMessageBlockHeader(message) +
@@ -326,17 +327,16 @@ function receiveMessages(data) {
   if (filterOwnMessages(data.message)) {
     if (data.message.isNotification) {
       //There are two types of messages with property isNotification = true, to send:
-      //1.- When an user is joint first time
+      //1.- When an user is join first time
       //2.- When an user is connected after a while
 
-      if (data.message.content.indexOf("has joint to this group") > -1) {
-        let newUserJoint = data.message.author;
-        newUserJoint["isActive"] = true;
-        app.users = app.users.concat(newUserJoint);
+      if (data.message.content.indexOf("has joined to this channel") > -1) {
+        let newUserJoined = data.message.author;
+        newUserJoined["isActive"] = true;
+        app.users = app.users.concat(newUserJoined);
       } else modifyStateUsers(data.message.author.id, true);
     }
 
-    console.log(data);
     let channelIndex = app.channels.findIndex(
       channel => channel.id == data.channel.id
     );
@@ -400,7 +400,7 @@ function changeChannel(channelIndex) {
 
   if (!app.channels[channelIndex].joined) {
     let messageForYouContent = "Welcome " + user.username;
-    messageForAllContent = user.username + " has joint to this channel";
+    messageForAllContent = user.username + " has joined to this channel";
     app.channels[channelIndex].joined = true;
     app.channels[channelIndex].visibility = true;
     let messageForYou = createNewMessage(
@@ -487,6 +487,7 @@ function connectionSocket() {
       }
     } else if (data.indexOf("usersConnected") == -1) {
       let receivedData = JSON.parse(data);
+      console.log(receivedData);
       receiveMessages(receivedData);
     }
   });
