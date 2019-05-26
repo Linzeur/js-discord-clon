@@ -1,8 +1,9 @@
 body {
   display: grid;
   margin: 0;
-  max-height: 100vh;
-  max-width: 100vw;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
   grid-template: 48px 1fr / 300px 1fr;
   grid-template-areas:
@@ -150,10 +151,12 @@ body {
 .channel-item {
   display: flex;
   align-items: center;
+  width: calc(100% - 40px);
 }
 
 .channel-item span {
   margin-left: 5px;
+  width: 95%;
 }
 
 .channel-item svg {
@@ -366,10 +369,6 @@ body {
   fill: #43b581;
   width: 18px;
   height: 18px;
-}
-
-.messages-old {
-  opacity: 0.7;
 }
 
 .icon-messages-old {
@@ -648,4 +647,14 @@ body {
   cursor: pointer;
   background-color: #36393f;
   border-radius: 5px;
+}
+
+/* Only mobile */
+
+#btnMenu,
+#btnDots,
+#btnSearch,
+#btnSend,
+#btnPlus {
+  display: none;
 }
