@@ -94,13 +94,14 @@
         </symbol>
       </svg>
     </div>
-    <section class="app-name">
+    <section id="app-name" class="app-name">
+      <svg id="btnClose" onclick="showLeft()"><use xlink:href="#plus" ></svg>
       <p class="group-name">Codeable V. 1.0 Gate3</p>
       <svg><use xlink:href="#arrow" ></svg>
     </section>
-    <section class="channel-header">
+    <section id="channel-header" class="channel-header">
       <div class="channel-name">
-        <svg id="btnMenu"><use xlink:href="#menu"></svg>
+        <svg id="btnMenu" onclick="showLeft()"><use xlink:href="#menu"></svg>
         <svg><use xlink:href="#hashtag"></svg>
         <span class="name" id="spnNameChannel">general</span>
       </div>
@@ -123,7 +124,7 @@
         <svg id="btnHelp"><use xlink:href="#help"></svg>
       </div>
     </section>
-    <section class="channels">
+    <section id="channels" class="channels">
       <div class="container-channels scrollbar groups">
         <div class="all-channels">
           <div class="channel-header-list">
@@ -165,7 +166,7 @@
         </div>
       </div>
     </section>
-    <section class="chat-room">
+    <section id="chat-room" class="chat-room">
       <div class="only-chat">
         <div class="chat-container">
           <div class="messages scrollbar chat">
