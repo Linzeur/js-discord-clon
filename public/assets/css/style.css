@@ -364,6 +364,14 @@ body {
   height: 18px;
 }
 
+.messages-old {
+  opacity: 0.7;
+}
+
+.icon-messages-old {
+  filter: grayscale(1);
+}
+
 .container-notification,
 .line {
   display: flex;
@@ -391,6 +399,7 @@ body {
   line-height: 19px;
   font-weight: 500;
   font-size: 14px;
+  text-align: center;
 }
 
 .line-date::after {
@@ -404,6 +413,7 @@ body {
   color: rgb(255, 255, 250);
   font-size: 12px;
   margin-left: 7px;
+  padding-top: 3px;
 }
 
 .group-notification {
