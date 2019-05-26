@@ -29,7 +29,8 @@
     display: block;
   }
 
-  #btnSend {
+  #btnSend,
+  #btnClose {
     display: block;
   }
 
@@ -65,6 +66,13 @@
     height: 19px;
   }
 
+  #btnClose {
+    fill: #fff;
+    width: 23px;
+    height: 23px;
+    transform: rotate(45deg);
+  }
+
   .messages ul {
     padding-left: 13px;
   }
@@ -86,5 +94,44 @@
 
   .chat-footer.-b-top {
     border-top: 1px solid #312828;
+  }
+
+  .app-name p {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .app-active {
+    display: flex;
+    position: absolute;
+    padding: 2px 10px;
+    left: 0;
+    width: 220px;
+    z-index: 1;
+    transition: all 0.25s;
+    box-sizing: border-box;
+  }
+
+  .channels-active {
+    display: block;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 220px;
+    z-index: 1;
+    transition: all 0.25s;
+    box-sizing: border-box;
+  }
+
+  .channel-header-list {
+    padding-top: 15px;
+  }
+
+  .group-name {
+    margin: 14px 0;
+  }
+
+  .scrollbar.groups {
+    height: calc(100vh - 44px - 48px - 20px);
   }
 }
