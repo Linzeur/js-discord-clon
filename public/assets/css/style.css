@@ -368,10 +368,6 @@ body {
   height: 18px;
 }
 
-.messages-old {
-  opacity: 0.7;
-}
-
 .icon-messages-old {
   filter: grayscale(1);
 }

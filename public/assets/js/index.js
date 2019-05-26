@@ -3,7 +3,8 @@ const maxAttempt = 20;
 
 var attemptConnectionSocket = 0;
 var indexChannelActive = 0;
-var firstConnection = true;
+var firstConnection = true,
+  isPageVisible = true;
 var app, socket, stateNotification;
 var fakemessages = [
   {
@@ -170,12 +171,12 @@ function listAllMembers() {
 }
 
 function newNotificationElement(message) {
-  let styleOldMessages = "";
-  if (!message.isNew) styleOldMessages = "messages-old";
+  let styleOldIcon = "";
+  if (!message.isNew) styleOldIcon = "icon-messages-old";
 
   return `
-  <li class="container-notification -b-top ${styleOldMessages}">
-    <svg><use xlink:href="#arrow-right"/></svg>
+  <li class="container-notification -b-top">
+    <svg class="${styleOldIcon}"><use xlink:href="#arrow-right"/></svg>
     <span class="group-notification">${message.content.replace(
       message.author.username,
       `<span class='user'>${message.author.username}</span>`
@@ -188,15 +189,11 @@ function newNotificationElement(message) {
 }
 
 function newMessageBlockHeader(message) {
-  let styleOldMessages = "",
-    styleOldIcon = "";
-  if (!message.isNew) {
-    styleOldMessages = "messages-old";
-    styleOldIcon = "icon-messages-old";
-  }
+  let styleOldIcon = "";
+  if (!message.isNew) styleOldIcon = "icon-messages-old";
 
   return `
-  <li class="container-messages -b-top ${styleOldMessages}">
+  <li class="container-messages -b-top">
     <div class="user-img">
       <img
         class="${styleOldIcon}"
@@ -385,6 +382,14 @@ function receiveMessages(data) {
     app.channels[channelIndex].messages.push(data.message);
     localStorage.setItem(keyStorage, JSON.stringify(app));
     listAllMembers();
+    if (!isPageVisible) {
+      if (stateNotification == "granted") {
+        let title = `The user ${data.author.username} has written`;
+        let body = data.content;
+        const notification = sendNotificationAPI(title, body);
+        notification.addEventListener("click", () => window.focus());
+      }
+    }
   }
 }
 
@@ -402,6 +407,15 @@ async function createNotificationAPI() {
       stateNotification = await Notification.requestPermission();
     }
   }
+}
+
+function sendNotificationAPI(title, body) {
+  let notification = new Notification(title, {
+    body: body,
+    icon: "/assets/img/discord_icon.ico",
+    image: "/assets/img/discord_icon.ico"
+  });
+  return notification;
 }
 
 function changeChannel(channelIndex) {
@@ -480,11 +494,10 @@ function connectionSocket() {
         app.channels.push(receivedData);
         listChannels();
         if (stateNotification == "granted") {
-          const notification = new Notification("New channel was created", {
-            body: `The name of channel is ${receivedData.name}`,
-            icon: "/assets/img/discord_icon.ico",
-            image: "/assets/img/discord_icon.ico"
-          });
+          let title = "New channel was created";
+          let body = `The name of channel is ${receivedData.name}`;
+          const notification = sendNotificationAPI(title, body);
+
           notification.addEventListener(
             "click",
             // goToChannelFirstTime.bind(null, app.channels.length - 1)
@@ -558,6 +571,14 @@ function assignEvents() {
   });
 
   connectionSocket();
+
+  document.addEventListener("visibilitychange", event => {
+    if (document.hidden) {
+      isPageVisible = false;
+    } else {
+      isPageVisible = true;
+    }
+  });
 }
 
 window.onload = function() {
