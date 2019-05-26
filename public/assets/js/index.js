@@ -130,6 +130,47 @@ function goToChannelFirstTime(indexListChannel) {
   console.log(app.channels[indexChannelActive].name);
 }
 
+function listAllMembers() {
+  let statesUsers = document.getElementsByClassName("state");
+  let numUsersOnline = 0,
+    numUsersOffline = 0;
+  let strOnline = "",
+    strOffline = "";
+  let iconUserActual = "";
+  app.users.forEach((user, index) => {
+    if (index == 0) iconUserActual = '<svg><use xlink:href="#crown"></svg>';
+    else iconUserActual = "";
+    if (user.isActive) {
+      numUsersOnline++;
+      strOnline += `<div class="block-user">
+                      <div class="user-img -block in-tab">
+                        <img
+                          src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
+                          alt="user-image"
+                        />
+                      </div>
+                      <span class="user -block">${user.username}</span>
+                      ${iconUserActual}
+                    </div>`;
+    } else {
+      numUsersOffline++;
+      strOffline += `<div class="block-user offline">
+                      <div class="user-img -block">
+                        <img
+                          src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
+                          alt="user-image"
+                        />
+                      </div>
+                      <span class="user -block">${user.username}</span>
+                    </div>`;
+    }
+  });
+  statesUsers[0].innerHTML = `ONLINE ${numUsersOnline}`;
+  statesUsers[1].innerHTML = `OFFLINE ${numUsersOffline}`;
+  document.getElementById("dvOnline").innerHTML = strOnline;
+  document.getElementById("dvOffline").innerHTML = strOffline;
+}
+
 function newNotificationElement(message) {
   let styleOldMessages = "";
   if (!message.isNew) styleOldMessages = "messages-old";
@@ -335,6 +376,7 @@ function receiveMessages(data) {
     appendNewMessage(data);
     app.channels[indexChannelActive].messages.push(data);
     localStorage.setItem(keyStorage, JSON.stringify(app));
+    listAllMembers();
   }
 }
 
@@ -406,6 +448,7 @@ function connectionSocket() {
       let idUserDisconnected = data.split("|")[1] * 1;
       modifyStateUsers(idUserDisconnected, false);
       localStorage.setItem(keyStorage, JSON.stringify(app));
+      listAllMembers();
     } else if (data.indexOf("newChannel") > -1) {
       let receivedData = JSON.parse(data.split("|")[1]);
       if (receivedData.author.id != app.currentuser.id) {
@@ -491,6 +534,7 @@ window.onload = function() {
     assignEvents();
     listChannels();
     listAllMessages();
+    listAllMembers();
   } else {
     window.location.href = "login.html";
   }
