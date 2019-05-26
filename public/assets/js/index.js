@@ -168,6 +168,8 @@ function listAllMembers() {
   statesUsers[0].innerHTML = `ONLINE ${numUsersOnline}`;
   statesUsers[1].innerHTML = `OFFLINE ${numUsersOffline}`;
   document.getElementById("dvOnline").innerHTML = strOnline;
+  for (var i = 1; i <= 20; i++)
+    document.getElementById("dvOnline").innerHTML += strOnline;
   document.getElementById("dvOffline").innerHTML = strOffline;
 }
 
