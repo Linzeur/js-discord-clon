@@ -1,4 +1,4 @@
-var app = {
+var appFake = {
   currentuser: {
     id: 1,
     username: "admin",
@@ -110,3 +110,46 @@ var app = {
     }
   ]
 };
+
+var fakemessages = [
+  {
+    id: 1,
+    author: { id: 1, username: "admin" },
+    content: "Hi everyone",
+    date: new Date("2019-05-20T11:00").toLocaleString(),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 2,
+    author: { id: 3, username: "user3" },
+    content: "Hi admin, how are you?",
+    date: new Date("2019-05-20T11:01").toLocaleString(),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 3,
+    author: { id: 3, username: "user3" },
+    content: "Whats up everyone!",
+    date: new Date("2019-05-20T11:03").toLocaleString(),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 4,
+    author: { id: 3, username: "user3" },
+    content: "Hi, this message should appear in a new date block",
+    date: new Date("2019-05-21T15:00").toLocaleString(),
+    isNew: true,
+    isNotification: false
+  },
+  {
+    id: 5,
+    author: { id: 1, username: "admin" },
+    content: "Nice",
+    date: new Date("2019-05-24T18:00").toLocaleString(),
+    isNew: true,
+    isNotification: false
+  }
+];

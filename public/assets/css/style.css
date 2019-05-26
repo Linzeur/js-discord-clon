@@ -150,10 +150,12 @@ body {
 .channel-item {
   display: flex;
   align-items: center;
+  width: calc(100% - 40px);
 }
 
 .channel-item span {
   margin-left: 5px;
+  width: 95%;
 }
 
 .channel-item svg {

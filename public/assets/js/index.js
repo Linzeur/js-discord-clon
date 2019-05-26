@@ -6,48 +6,6 @@ var indexChannelActive = 0;
 var firstConnection = true,
   isPageVisible = true;
 var app, socket, stateNotification;
-var fakemessages = [
-  {
-    id: 1,
-    author: { id: 1, username: "admin" },
-    content: "Hi everyone",
-    date: new Date("2019-05-20T11:00").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 2,
-    author: { id: 3, username: "user3" },
-    content: "Hi admin, how are you?",
-    date: new Date("2019-05-20T11:01").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 3,
-    author: { id: 3, username: "user3" },
-    content: "Whats up everyone!",
-    date: new Date("2019-05-20T11:03").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 4,
-    author: { id: 3, username: "user3" },
-    content: "Hi, this message should appear in a new date block",
-    date: new Date("2019-05-21T15:00").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  },
-  {
-    id: 5,
-    author: { id: 1, username: "admin" },
-    content: "Nice",
-    date: new Date("2019-05-24T18:00").toLocaleString(),
-    isNew: true,
-    isNotification: false
-  }
-];
 
 function createNewChannel(name, author) {
   return {
@@ -182,7 +140,10 @@ function newNotificationElement(message) {
       `<span class='user'>${message.author.username}</span>`
     )}</span>
     <span class="date">
-    ${new Date(message.date).toLocaleTimeString()}
+    ${new Date(message.date).toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit"
+    })}
     </span>
   </li>
   `;
@@ -206,7 +167,10 @@ function newMessageBlockHeader(message) {
         <li class="container-user">
           <span class="user">${message.author.username}</span>
           <span class="date">
-          ${new Date(message.date).toLocaleTimeString()}
+          ${new Date(message.date).toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit"
+          })}
           </span>
         </li>
   `;
@@ -376,15 +340,25 @@ function receiveMessages(data) {
     let channelIndex = app.channels.findIndex(
       channel => channel.id == data.channel.id
     );
-    if (indexChannelActive == channelIndex) {
-      appendNewMessage(data.message);
+    if (indexChannelActive == channelIndex) appendNewMessage(data.message);
+    else {
+      if (stateNotification == "granted") {
+        let title = `New messages in #${app.channels[channelIndex].name}`;
+        let body = `The user ${data.message.author.username} has written`;
+        const notification = sendNotificationAPI(title, body);
+        notification.addEventListener("click", () =>
+          changeChannel.bind(null, channelIndex)
+        );
+      }
     }
+
     app.channels[channelIndex].messages.push(data.message);
     localStorage.setItem(keyStorage, JSON.stringify(app));
     listAllMembers();
+
     if (!isPageVisible) {
       if (stateNotification == "granted") {
-        let title = `The user ${data.author.username} has written`;
+        let title = `The user ${data.message.author.username} has written`;
         let body = data.content;
         const notification = sendNotificationAPI(title, body);
         notification.addEventListener("click", () => window.focus());
@@ -419,6 +393,8 @@ function sendNotificationAPI(title, body) {
 }
 
 function changeChannel(channelIndex) {
+  console.log("Preubas");
+  window.focus();
   let user = app.currentuser;
   let messageForAll = "";
 
@@ -450,6 +426,10 @@ function changeChannel(channelIndex) {
   socket.send(JSON.stringify(messageForAll));
   localStorage.setItem(keyStorage, JSON.stringify(app));
   listAllMessages();
+  let nameChannel = app.channels[indexChannelActive].name;
+  document.getElementById("spnNameChannel").innerHTML = nameChannel;
+  let placeholder = `send message to #${nameChannel}`;
+  document.getElementById("txtMessage").placeholder = placeholder;
 }
 
 function initializeConnection() {
@@ -500,7 +480,6 @@ function connectionSocket() {
 
           notification.addEventListener(
             "click",
-            // goToChannelFirstTime.bind(null, app.channels.length - 1)
             changeChannel.bind(null, app.channels.length - 1)
           );
         }
@@ -561,7 +540,10 @@ function assignEvents() {
   $formSendMessage.addEventListener("submit", handleAddMessageSubmit);
 
   document.addEventListener("click", function(e) {
-    if (e.target && e.target.className.includes("channel-item-name")) {
+    if (
+      e.target &&
+      e.target.className.toString().includes("channel-item-name")
+    ) {
       let newChannelIndex = parseInt(
         e.target.parentElement.parentElement.getAttribute("data-index-channel")
       );
