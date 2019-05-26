@@ -292,7 +292,9 @@ function appendNewMessage(message) {
     lastMessage.isNotification ||
     message.author.id != lastMessage.author.id ||
     areDifferenteDate(newDate, previousDate) ||
-    $lastMessagePrinted.classList.contains("messages-old")
+    $lastMessagePrinted.firstElementChild.firstElementChild.classList.contains(
+      "icon-messages-old"
+    )
   ) {
     $messages_container.innerHTML +=
       newMessageBlockHeader(message) +
