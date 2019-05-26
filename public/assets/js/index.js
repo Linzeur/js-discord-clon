@@ -320,6 +320,8 @@ function filterOwnMessages(message) {
 
 function modifyStateUsers(idUser, newState) {
   let indexUserFound = app.users.findIndex(user => user.id == idUser);
+  console.log(indexUserFound);
+  console.log(app.users[indexUserFound]);
   app.users[indexUserFound].isActive = newState;
 }
 
@@ -329,10 +331,11 @@ function receiveMessages(data) {
       //There are two types of messages with property isNotification = true, to send:
       //1.- When an user is join first time
       //2.- When an user is connected after a while
-      if (data.message.content.indexOf("has joint") > -1) {
-        let newUserJoint = data.message.author;
-        newUserJoint["isActive"] = true;
-        app.users = app.users.concat(newUserJoint);
+
+      if (data.message.content.indexOf("has joined to this channel") > -1) {
+        let newUserJoined = data.message.author;
+        newUserJoined["isActive"] = true;
+        app.users = app.users.concat(newUserJoined);
       } else modifyStateUsers(data.message.author.id, true);
     }
 
@@ -392,6 +395,7 @@ function sendNotificationAPI(title, body) {
 }
 
 function changeChannel(channelIndex) {
+  console.log("Preubas");
   window.focus();
   let user = app.currentuser;
   let messageForAll = "";
@@ -426,7 +430,7 @@ function changeChannel(channelIndex) {
   listAllMessages();
   let nameChannel = app.channels[indexChannelActive].name;
   document.getElementById("spnNameChannel").innerHTML = nameChannel;
-  let placeholder = `Send message to #${nameChannel}`;
+  let placeholder = `send message to #${nameChannel}`;
   document.getElementById("txtMessage").placeholder = placeholder;
 }
 
