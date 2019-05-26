@@ -38,3 +38,17 @@ Create a multi channel chat application using the WebSocket server in [codeableo
 - [ ] It must pass with green the Best Practices tests of the Chrome Audits
 - [ ] It must pass with green the SEO tests of the Chrome Audits
 - [ ] The server code should not be modified in any way
+
+## Installation
+
+```bash
+npm install
+```
+
+```bash
+npm start
+```
+then open your web browser with the following address:
+
+http://localhost:3000/
+
