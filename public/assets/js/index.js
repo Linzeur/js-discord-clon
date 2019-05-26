@@ -119,6 +119,8 @@ function listChannels() {
   });
   let channelList = document.getElementById("channels-list");
   channelList.innerHTML = elements;
+  let containerScroll = channelList.parentNode.parentNode.parentNode;
+  containerScroll.scrollTop = containerScroll.scrollHeight;
 }
 
 function goToChannelFirstTime(indexListChannel) {
@@ -272,6 +274,8 @@ function listAllMessages() {
 
     let $messagesContainer = document.getElementById("messages_container");
     $messagesContainer.innerHTML = messaggesList;
+    $messagesContainer.parentNode.scrollTop =
+      $messagesContainer.parentNode.scrollHeight;
   }
 }
 
@@ -302,6 +306,8 @@ function appendNewMessage(message) {
       message
     );
   }
+  $messages_container.parentNode.scrollTop =
+    $messages_container.parentNode.scrollHeight;
 }
 
 function filterOwnMessages(messageReceived) {
