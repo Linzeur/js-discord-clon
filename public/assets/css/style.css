@@ -151,10 +151,12 @@ body {
 .channel-item {
   display: flex;
   align-items: center;
+  width: calc(100% - 40px);
 }
 
 .channel-item span {
   margin-left: 5px;
+  width: 95%;
 }
 
 .channel-item svg {
@@ -367,10 +369,6 @@ body {
   fill: #43b581;
   width: 18px;
   height: 18px;
-}
-
-.messages-old {
-  opacity: 0.7;
 }
 
 .icon-messages-old {
