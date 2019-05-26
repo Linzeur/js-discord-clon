@@ -485,6 +485,11 @@ body {
   height: calc(100vh - 50px - 48px - 20px);
 }
 
+.scrollbar.state-users {
+  display: block;
+  height: calc(100vh - 48px - 2px);
+}
+
 .scrollbar::-webkit-scrollbar {
   width: 10px;
   margin-left: 5px;
