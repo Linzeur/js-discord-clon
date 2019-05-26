@@ -94,7 +94,7 @@
       <div class="channel-option">
         <svg><use xlink:href="#bel"></svg>
         <svg><use xlink:href="#pin"></svg>
-        <svg><use xlink:href="#people"></svg>
+        <svg id="btnPeople" onclick="showMemberList()" class=""><use xlink:href="#people"></svg>
         <div class="search">
           <form action="">
             <label for="input-search" aria-label="add search"></label>
@@ -109,7 +109,7 @@
       </div>
     </section>
     <section class="channels">
-      <div class="container-channels">
+      <div class="container-channels scrollbar groups">
         <div class="all-channels">
           <div class="channel-header-list">
             <div class="header-name">
@@ -153,9 +153,9 @@
     <section class="chat-room">
       <div class="only-chat">
         <div class="chat-container">
-          <div class="messages">
-            <ul id = "messages_container">
-              <!-- <li class="line">
+          <div class="messages scrollbar chat">
+            <ul id="messages_container">
+              <li class="line">
                 <span class="line-date">23 de mayo de 2019</span>
               </li>
               <li class="container-notification -b-top">
@@ -195,29 +195,10 @@
                   </ul>
                 </div>
               </li>
-              <li class="container-messages -b-top">
-                <div class="user-img">
-                  <img
-                    src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
-                    alt="user-image"
-                  />
-                </div>
-                <div class="user-messages">
-                  <ul>
-                    <li class="container-user">
-                      <span class="user">Brian</span>
-                      <span class="date">hoy a las 14:51</span>
-                    </li>
-                    <li class="talk">Asi te queria encontrar!</li>
-                    <li class="talk">Señooooooooorrr!!!</li>
-                    <li class="talk">Señooooooooorrr!!!</li>
-                  </ul>
-                </div>
-              </li> -->
             </ul>
           </div>
         </div>
-        <div class="chat-footer">
+        <div class="chat-footer -b-top">
           <div class="container-footer">
             <svg class="-effect"><use xlink:href="#plus-circle"></svg>
             <div class="write-message">
@@ -239,8 +220,7 @@
           </div>
         </div>
       </div>
-      <div class="container-member">
-        <svg><use xlink:href="#arrow" ></svg>
+      <div id="divMembers" class="container-member">
         <div class="member-list">
           <span class="state">ONLINE 2</span>
             <div class="block-user">
@@ -286,5 +266,6 @@
     </section>
     <script src="./assets/js/db-fake.js"></script>
     <script src="./assets/js/index.js"></script> 
+    <script src="./assets/js/action.js"></script>
   </body>
 </html>

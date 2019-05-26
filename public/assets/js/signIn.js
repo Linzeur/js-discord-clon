@@ -13,7 +13,7 @@ function newAppObject(newUsername) {
     currentuser: {
       id: newId,
       username: newUsername,
-      creationDate: new Date(),
+      creationDate: new Date().toLocaleString(),
       state: "active"
     },
     users: [

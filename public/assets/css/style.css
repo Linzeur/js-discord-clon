@@ -1,7 +1,7 @@
 body {
   display: grid;
   margin: 0;
-  height: 100vh;
+  max-height: 100vh;
   max-width: 100vw;
   font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
   grid-template: 48px 1fr / 300px 1fr;
@@ -58,7 +58,7 @@ body {
 
 .container-channels {
   color: #8e9297;
-  padding: 0 20px 20px 20px;
+  padding: 0 10px 20px 20px;
 }
 
 .channel-header-list {
@@ -307,6 +307,10 @@ body {
   cursor: pointer;
 }
 
+.svg-active {
+  fill: #fff !important;
+}
+
 .search {
   display: flex;
   flex-direction: row;
@@ -364,6 +368,14 @@ body {
   height: 18px;
 }
 
+.messages-old {
+  opacity: 0.7;
+}
+
+.icon-messages-old {
+  filter: grayscale(1);
+}
+
 .container-notification,
 .line {
   display: flex;
@@ -391,6 +403,7 @@ body {
   line-height: 19px;
   font-weight: 500;
   font-size: 14px;
+  text-align: center;
 }
 
 .line-date::after {
@@ -404,6 +417,7 @@ body {
   color: rgb(255, 255, 250);
   font-size: 12px;
   margin-left: 7px;
+  padding-top: 3px;
 }
 
 .group-notification {
@@ -459,6 +473,28 @@ body {
   border-radius: 50%;
 }
 
+.scrollbar {
+  overflow-y: scroll;
+}
+
+.scrollbar.chat {
+  height: calc(100vh - 66px - 48px - 2px);
+}
+
+.scrollbar.groups {
+  height: calc(100vh - 50px - 48px - 20px);
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 10px;
+  margin-left: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  background-color: #202225;
+}
+
 .chat-footer {
   padding: 10px;
 }
@@ -511,36 +547,17 @@ body {
 /* ========== MEMBER LIST =================== */
 
 .container-member {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 20px;
+  display: none;
+  width: 0;
   background: #2f3136;
 }
 
-.container-member > svg {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  align-self: center;
-  fill: hsla(0, 0%, 100%, 0.4);
-  transform: rotate(90deg);
-}
-
-.container-member > svg:hover {
-  cursor: pointer;
-}
-
-.container-member:hover {
+.state-members {
+  display: flex;
   width: 300px;
 }
 
-.container-member:hover > svg {
-  transform: rotate(-90deg);
-}
-
 .member-list {
-  display: none;
   flex-direction: column;
   justify-content: flex-start;
   white-space: nowrap;
@@ -553,12 +570,12 @@ body {
   color: hsla(0, 0%, 100%, 0.4);
 }
 
-.container-member:hover .member-list {
+.member-list {
   display: flex;
   padding: 0 16px;
 }
 
-.container-member:hover .state {
+.state {
   padding: 20px 0 10px 0;
 }
 

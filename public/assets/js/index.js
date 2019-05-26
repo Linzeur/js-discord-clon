@@ -42,7 +42,7 @@ var fakemessages = [
     id: 5,
     author: { id: 1, username: "admin" },
     content: "Nice",
-    date: new Date("2019-05-21T18:00").toLocaleString(),
+    date: new Date("2019-05-24T18:00").toLocaleString(),
     isNew: true,
     isNotification: false
   }
@@ -72,11 +72,11 @@ function createNewMessage(message, author, typeMessage) {
 }
 
 function formatName(name) {
-  let nameFormated = name.replace(/</g, "&lt;");
-  nameFormated = nameFormated.replace(/>/g, "&gt;");
-  nameFormated = nameFormated.replace(/"/g, "&quot;");
-  nameFormated = nameFormated.replace(/'/g, "&apos;");
-  return nameFormated;
+  let nameFormatted = name.replace(/</g, "&lt;");
+  nameFormatted = nameFormatted.replace(/>/g, "&gt;");
+  nameFormatted = nameFormatted.replace(/"/g, "&quot;");
+  nameFormatted = nameFormatted.replace(/'/g, "&apos;");
+  return nameFormatted;
 }
 
 function addChannel(name, author) {
@@ -131,8 +131,11 @@ function goToChannelFirstTime(indexListChannel) {
 }
 
 function newNotificationElement(message) {
+  let styleOldMessages = "";
+  if (!message.isNew) styleOldMessages = "messages-old";
+
   return `
-  <li class="container-notification -b-top">
+  <li class="container-notification -b-top ${styleOldMessages}">
     <svg><use xlink:href="#arrow-right"/></svg>
     <span class="group-notification">${message.content.replace(
       message.author.username,
@@ -146,10 +149,18 @@ function newNotificationElement(message) {
 }
 
 function newMessageBlockHeader(message) {
+  let styleOldMessages = "",
+    styleOldIcon = "";
+  if (!message.isNew) {
+    styleOldMessages = "messages-old";
+    styleOldIcon = "icon-messages-old";
+  }
+
   return `
-  <li class="container-messages -b-top">
+  <li class="container-messages -b-top ${styleOldMessages}">
     <div class="user-img">
       <img
+        class="${styleOldIcon}"
         src="https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png"
         alt="user-image"
       />
@@ -165,6 +176,12 @@ function newMessageBlockHeader(message) {
   `;
 }
 
+function newMessageBlockElement(message) {
+  return `
+    <li class="talk">${message.content}</li>
+  `;
+}
+
 function newMessageBlockFooter() {
   return `
         </ul>
@@ -174,16 +191,19 @@ function newMessageBlockFooter() {
 }
 
 function newDateSeparator(date) {
+  let now = new Date();
+  let today = now.getDate();
+  now.setDate(today - 1);
+  let yesterday = now.getDate();
+  date = new Date(date);
+  let dateFormatted = date.toDateString();
+  if (date.getDate() == today) dateFormatted = "Today";
+  else if (date.getDate() == yesterday) dateFormatted = "Yesterday";
+
   return `
     <li class="line">
-      <span class="line-date">${new Date(date).toDateString()}</span>
+      <span class="line-date">${dateFormatted}</span>
     </li>
-  `;
-}
-
-function newMessageBlockElement(message) {
-  return `
-    <li class="talk">${message.content}</li>
   `;
 }
 
@@ -478,7 +498,7 @@ window.onload = function() {
 
 window.onbeforeunload = function() {
   let userNotActive = "userDisconnected|" + app.currentuser.id;
-  if (socket.readyState == 1) {
+  if (socket != null && socket.readyState == 1) {
     socket.send(userNotActive);
     socket.close();
   }
